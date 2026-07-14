@@ -1,0 +1,61 @@
+<div class="report-page">
+  <form class="report-form" [formGroup]="form" (ngSubmit)="submit()">
+    <h1>Nouveau rapport de chantier</h1>
+
+    <label for="siteName">Nom du chantier</label>
+    <input id="siteName" type="text" formControlName="siteName" placeholder="Ex: Residence Les Tilleuls" />
+
+    <label for="address">Adresse</label>
+    <input id="address" type="text" formControlName="address" placeholder="Ex: 12 rue des Lilas, Paris" />
+
+    <label for="interventionDate">Date d'intervention</label>
+    <input id="interventionDate" type="date" formControlName="interventionDate" />
+
+    <label for="notes">Notes (optionnel)</label>
+    <textarea id="notes" formControlName="notes" rows="3" placeholder="Remarques, produits utilises..."></textarea>
+
+    <fieldset class="photo-section">
+      <legend>Photos avant intervention</legend>
+      <label class="photo-picker">
+        <input type="file" accept="image/*" capture="environment" multiple (change)="onFilesSelected($event, 'before')" />
+        + Ajouter des photos
+      </label>
+      <div class="photo-grid">
+        @for (photo of beforePhotos(); track photo.url; let i = $index) {
+          <div class="photo-thumb">
+            <img [src]="photo.url" alt="Photo avant" />
+            <button type="button" class="remove-btn" (click)="removePhoto('before', i)">×</button>
+          </div>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="photo-section">
+      <legend>Photos apres intervention</legend>
+      <label class="photo-picker">
+        <input type="file" accept="image/*" capture="environment" multiple (change)="onFilesSelected($event, 'after')" />
+        + Ajouter des photos
+      </label>
+      <div class="photo-grid">
+        @for (photo of afterPhotos(); track photo.url; let i = $index) {
+          <div class="photo-thumb">
+            <img [src]="photo.url" alt="Photo apres" />
+            <button type="button" class="remove-btn" (click)="removePhoto('after', i)">×</button>
+          </div>
+        }
+      </div>
+    </fieldset>
+
+    @if (errorMessage()) {
+      <p class="form-error">{{ errorMessage() }}</p>
+    }
+
+    @if (result()) {
+      <p class="form-success">Rapport envoye avec succes.</p>
+    }
+
+    <button type="submit" class="submit-btn" [disabled]="loading()">
+      {{ loading() ? 'Envoi en cours...' : 'Envoyer le rapport' }}
+    </button>
+  </form>
+</div>
