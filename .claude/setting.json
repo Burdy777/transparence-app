@@ -1,0 +1,36 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "Read(./src/**)",
+      "Read(./package.json)",
+      "Read(./angular.json)",
+      "Read(./tsconfig*.json)",
+      "Write(./src/**)",
+      "Bash(ng serve)",
+      "Bash(ng build)",
+      "Bash(ng test --*)",
+      "Bash(ng lint)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Read(./.env*)",
+      "Read(./secrets/**)",
+      "Bash(npm install *)",
+      "Bash(git push *)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write(./src/**/*.ts)",
+        "command": "ng lint --fix"
+      }
+    ]
+  }
+}

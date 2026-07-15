@@ -1,4 +1,8 @@
-/*import { computed, inject } from '@angular/core';
+# NgRx Signal Store Patterns
+Use this skill when creating or modifying NgRx Signal Stores.
+## Standard Store Template
+[
+import { computed, inject } from '@angular/core';
 import {
   patchState,
   signalStore,
@@ -79,4 +83,9 @@ export const UsersStore = signalStore(
     ),
   }))
 );
-*/
+]
+## Naming Conventions
+- Store file: `<feature>.store.ts`
+- Store class: `<Feature>Store`
+- Provide at root: `{ providedIn: 'root' }` for app-wide stores
+- Provide at component: omit `providedIn` for scoped stores

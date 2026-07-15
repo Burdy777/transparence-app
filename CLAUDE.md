@@ -1,47 +1,67 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# Enterprise Angular App — Claude Code Context
 
 ## What this is
 
-Mobile-first Angular 22 app letting cleaning agents file an intervention report (site info, notes, before/after photos) from their phone. It is the `frontend/` half of a two-repo project; the sibling `technician-intervention-transparence-backend/` is a Node/Express API that authenticates agents (JWT), uploads photos to Google Drive, and forwards the report's text data to an **external storage API**. The backend has no database of its own — see the parent directory's `README.md` for the full system description.
-
+Mobile-first Angular 22 app letting cleaning agents file an intervention report (site info, notes, before/after photos) from their phone. It is the `frontend/` half of a two-repo project. The backend is a Node/Express API that authenticates agents (JWT), uploads photos to Google Drive, and forwards the report's text data to an **external storage API**. 
 UI text is French (unaccented, e.g. `apres`, `rapport envoye`). Keep new user-facing strings in the same style.
-
-## Commands
-
-```bash
-npm start                       # ng serve on http://localhost:4200 (dev config)
-npm run build                   # production build (defaultConfiguration: production) -> dist/
-npm run watch                   # rebuild on change, development config
-npm test                        # Vitest via `ng test` (@angular/build:unit-test builder)
-npx ng test --test-file src/app/app.spec.ts   # single spec file
-```
-
-The backend must be running on `http://localhost:3000` for login and report submission to work in dev.
-
-## Architecture
-
-Standalone components throughout — no NgModules. Bootstrapped in [src/main.ts](src/main.ts) with [app.config.ts](src/app/app.config.ts), which wires `provideRouter`, and `provideHttpClient(withFetch(), withInterceptors([authInterceptor]))`.
-
-**Routing** ([app.routes.ts](src/app/app.routes.ts)) — all routes lazy-load their component. Route paths are French: `/login`, `/nouveau-rapport` (default), `/historique`. The latter two are protected by [authGuard](src/app/core/guards/auth-guard.ts), which redirects to `/login` when no token is present.
-
-**Auth** ([core/services/auth.ts](src/app/core/services/auth.ts)) — JWT + agent object live in `localStorage` under `chantier_app_token` / `chantier_app_agent`. `currentAgent` is a signal seeded from `localStorage` at construction, so a reload restores the session. [authInterceptor](src/app/core/interceptors/auth-interceptor.ts) attaches `Authorization: Bearer <token>` to every outgoing request when a token exists.
-
-**Report submission** ([core/services/reports.ts](src/app/core/services/reports.ts)) — `POST {apiBaseUrl}/reports` as `multipart/form-data`; photos go in repeated `beforePhotos` / `afterPhotos` fields. The response (`CreateReportResult`) carries Google Drive `webViewLink`s for each uploaded photo.
-
-**History is device-local, not server-side.** The backend exposes no read endpoint (reports live in the external API), so [report-form.ts](src/app/features/report-form/report-form.ts) writes each successful submission into `localStorage` under `chantier_app_local_history` (capped at 50 entries) and [report-history.ts](src/app/features/report-history/report-history.ts) just reads that key back. Anything that looks like it should query the server for past reports currently cannot.
 
 **Environments** — `apiBaseUrl` is `http://localhost:3000/api` in [environment.ts](src/environments/environment.ts) and `/api` in [environment.prod.ts](src/environments/environment.prod.ts) (assumes a reverse proxy in prod). `angular.json` swaps the file via `fileReplacements` on the production configuration only.
 
-## Conventions
-
-- Class names are bare (`Auth`, `Reports`, `App`, `Login`, `ReportForm`, `ReportHistory`) — no `Service`/`Component` suffix, matching Angular 22 CLI defaults. Filenames match (`auth.ts`, not `auth.service.ts`).
-- State in components is `signal()`; forms are reactive (`FormBuilder` + `Validators`). Services are injected with `inject()` in components/guards/interceptors and via constructor in services.
-- Photo previews use `URL.createObjectURL` — revoke on remove and on form reset (see `removePhoto` / `resetForm`) to avoid leaking blobs.
-- Styling: SCSS, no UI library. Global tokens (`--color-primary`, `--radius`, `--spacing`, …) are declared on `:root` in [src/styles.scss](src/styles.scss); prefer them over hardcoded values. Per-component styles have a hard 8kB budget in production builds.
-- TypeScript is `strict` with `strictTemplates` and `noPropertyAccessFromIndexSignature`. Prettier: 100 cols, single quotes (configured in `package.json`).
-
-## Known state
-
-[app.spec.ts](src/app/app.spec.ts) is leftover CLI scaffolding — its "should render title" test asserts an `<h1>` containing "Hello, frontend" that the real `app.html` does not have, so it fails. There is no other test coverage yet.
+## Stack
+- Angular 22 with standalone components and zoneless change detection
+- NgRx SignalStore (@ngrx/signals) for all shared/feature state
+- Bootstrap 5.3 via SCSS - NO Angular Material, NO Tailwind
+- RxJS for async operations; convert to signals at component boundary with toSignal()
+- Angular Eslint for lint
+- TypeScript strict mode enforced
+## Project Layout
+See @src/app/features for feature modules. Each feature has: components/, state/, services/, *.routes.ts, models/, pages/
+See @src/app/core for app-wide singletons: services/, guards/, interceptors/, models/ (and state/ for global stores). Provided once at bootstrap - never import feature code from here.
+See @src/app/shared for reusable, stateless building blocks: components/, and any shared pipes/directives/utils. No feature-specific logic and no dependency on core services.
+See @package.json for all available npm commands.
+## Commands
+- Build: `ng build`
+- Dev server: `ng serve`
+- Test single file: `ng test --include=**/<name>*.spec.ts`
+- Lint: `ng lint`
+- Type check: `npx tsc --noEmit`
+## Angular Rules
+- ALWAYS use standalone components (`standalone: true` in @Component)
+- ALWAYS use `inject()` function - never constructor injection
+- ALWAYS use `input()` signal API for @Input, `output()` for @Output
+- Use `OnPush` change detection strategy on all components
+- Use `@defer` blocks for non-critical UI sections
+- Prefer `httpResource()` for simple GET requests; use HttpClient for mutations
+## State Management Rules
+- Feature state lives in `features/<name>/state/<name>.store.ts`
+- Global state lives in `core/state/<name>.store.ts`
+- Store files use the NgRx SignalStore pattern (see @src/app/features/users/state/users.store.ts)
+- Private writable signals; expose readonly via asReadonly()
+- Use `patchState()` - NEVER mutate state directly
+- Async side effects use `withMethods` + RxJS inside store
+## Bootstrap 5 Rules
+- Use Bootstrap utility classes in templates - do NOT write custom CSS for spacing/layout
+- Custom component styles go in the component's .scss file using Bootstrap SCSS variables
+- Breakpoints: use Bootstrap's responsive utilities (col-md-6, d-none d-md-block, etc.)
+- Import Bootstrap SCSS in styles/_variables.scss; never in component files
+## File Naming
+- Components: `user-list.component.ts`
+- Stores: `users.store.ts`
+- Services: `user-api.service.ts`
+- Interfaces: `user.model.ts`
+- Routes: `users.routes.ts`
+## Git
+- Branch naming: `feature/<ticket>-short-description`
+- Never commit to main directly
+- Run `ng lint && npx tsc --noEmit` before committing
+## Approach
+- Read existing files before writing. Don't re-read unless changed.
+- Thorough in reasoning, concise in output.
+- Skip files over 100KB unless required.
+- No sycophantic openers or closing fluff.
+- No emojis or em-dashes.
+- Do not guess APIs, versions, flags, commit SHAs, or package names. Verify by reading code or docs before asserting.
+## IMPORTANT
+- Never add `zone.js` imports - this project is fully zoneless
+- Never use `NgModules` - standalone components only
+- Never install new npm packages without confirming with the user first

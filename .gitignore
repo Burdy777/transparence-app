@@ -43,4 +43,4 @@ __screenshots__/
 Thumbs.db
 
 # Claude local overrides (personnel, non versionne)
-.claude/CLAUDE.local.md
+/CLAUDE.local.md
