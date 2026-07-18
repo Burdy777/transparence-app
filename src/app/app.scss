@@ -1,48 +1,129 @@
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
+// Design tokens - Bleu eau
+$primary-color: #0080a0;
+$primary-light: #4db3cc;
+$primary-lighter: #e6f5f9;
+$primary-dark: #005a78;
+
+$secondary-color: #00b4d8;
+$accent-color: #48cae4;
+
+$neutral-100: #ffffff;
+$neutral-200: #f5f7fa;
+$neutral-600: #6b7582;
+$neutral-900: #1a1f2e;
+
+$spacing-sm: 1rem;
+
+// Bouton hamburger flottant (remplace la toolbar)
+.menu-fab {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 30;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.9);
+  color: $primary-dark;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  ::ng-deep .mat-icon,
+  .mat-icon {
+    color: $primary-dark;
+  }
+}
+
+// Conteneur du menu lateral
+.app-sidenav-container {
+  min-height: 100vh;
+  background: $neutral-200;
+}
+
+.app-sidenav {
+  width: 280px;
+  max-width: 80vw;
+  border-right: none;
+  background: $neutral-100;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  flex-wrap: wrap;
+  gap: 12px;
+  padding: 24px 20px;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: $neutral-100;
+}
 
-  .app-title {
-    font-weight: 700;
-    color: var(--color-primary-dark);
-    margin-right: auto;
-  }
+.sidenav-avatar {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
 
-  nav {
-    display: flex;
-    gap: 12px;
+.sidenav-user {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 
-    a {
-      text-decoration: none;
-      color: var(--color-text);
-      font-size: 0.9rem;
-      padding: 6px 10px;
-      border-radius: 6px;
+.sidenav-user-name {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-      &.active {
-        background: var(--color-primary);
-        color: white;
-      }
+.sidenav-user-role {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+}
+
+.sidenav-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+::ng-deep .app-sidenav {
+  .mat-mdc-list-item.active {
+    background: $primary-lighter;
+
+    .mat-mdc-list-item-title {
+      color: $primary-dark;
+      font-weight: 600;
+    }
+
+    .mat-icon {
+      color: $primary-color;
     }
   }
 
-  .logout-btn {
-    border: none;
-    background: transparent;
-    color: var(--color-muted);
-    font-size: 0.85rem;
+  .mat-mdc-list-item {
     cursor: pointer;
+
+    .mat-icon {
+      color: $neutral-600;
+    }
   }
 }
 
 main {
   min-height: 100vh;
+  background: $neutral-200;
+}
+
+mat-sidenav-content main {
+  min-height: 100%;
+}
+
+// Accessibility
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
