@@ -3,11 +3,19 @@
 // Coquille, contenu et libelle de section viennent des classes globales
 // (src/styles/_app-shell.scss). Ici : entete de salutation, bouton deconnexion,
 // et cartes d'action tactiles.
+// Entete stylee en app-bar (barre sticky, fond surface, bordure basse), pour
+// s'aligner sur les autres pages du parcours (Intervention, Anomalie...). Pas
+// de bouton retour ici : l'accueil est la racine du parcours.
 .home-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 22px 20px 6px;
+  padding: 14px 18px;
+  background: var(--rp-surface);
+  border-bottom: 1px solid var(--rp-line);
 
   .greeting {
     flex: 1;
@@ -16,15 +24,18 @@
     flex-direction: column;
 
     .hello {
-      font-size: 13px;
-      color: var(--rp-muted);
-      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--rp-faint);
+      font-weight: 600;
     }
 
     .name {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: -0.02em;
+      margin-top: 2px;
       color: var(--rp-ink);
       white-space: nowrap;
       overflow: hidden;
