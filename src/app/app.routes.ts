@@ -8,6 +8,10 @@ export const routes: Routes = [
   },
   {
     path: '',
+    loadChildren: () => import('./features/home/home.routes').then((m) => m.homeRoutes),
+  },
+  {
+    path: '',
     loadChildren: () =>
       import('./features/report-intervention/report-intervention.routes').then(
         (m) => m.reportInterventionRoutes,
@@ -15,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./features/user/user.routes').then((m) => m.userRoutes),
+    loadChildren: () => import('./features/anomaly/anomaly.routes').then((m) => m.anomalyRoutes),
   },
   {
     path: 'historique',
@@ -23,6 +27,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/report-history/report-history').then((m) => m.ReportHistory),
   },
-  { path: '', pathMatch: 'full', redirectTo: 'nouveau-rapport' },
-  { path: '**', redirectTo: 'nouveau-rapport' },
+  { path: '', pathMatch: 'full', redirectTo: 'accueil' },
+  { path: '**', redirectTo: 'accueil' },
 ];
