@@ -1,0 +1,218 @@
+<!-- Header colore (mobile uniquement) -->
+<div class="mobile-header">
+  <div class="mobile-header-eyebrow">Chantier proprete</div>
+  <h1 class="mobile-header-title">Rapport d'intervention</h1>
+</div>
+
+<div class="report-form-container">
+  <!-- Titre desktop (remplace par le header colore sur mobile) -->
+  <div class="desktop-header">
+    <h1 class="header-title">Rapport d'intervention</h1>
+    <p class="header-subtitle">Completez chaque etape pour documenter votre chantier</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="report-form">
+    <!-- Section 1: Chantier -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Chantier</h2>
+      </div>
+
+      <div class="form-field">
+        <label for="siteName">Nom du chantier</label>
+        <input
+          type="text"
+          id="siteName"
+          formControlName="siteName"
+          placeholder="Ex: Residence Les Tilleuls"
+        />
+        @if (form.get('siteName')?.hasError('required') && form.get('siteName')?.touched) {
+          <span class="error-text">Le nom du chantier est requis</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="address">Adresse</label>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          placeholder="Ex: 12 rue des Lilas, Paris"
+        />
+        @if (form.get('address')?.hasError('required') && form.get('address')?.touched) {
+          <span class="error-text">L'adresse est requise</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="interventionDate">Date d'intervention</label>
+        <input
+          type="date"
+          id="interventionDate"
+          formControlName="interventionDate"
+        />
+        @if (form.get('interventionDate')?.hasError('required') && form.get('interventionDate')?.touched) {
+          <span class="error-text">La date est requise</span>
+        }
+      </div>
+    </div>
+
+    <!-- Section 2: Observations -->
+    <div class="form-section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Observations</h2>
+      </div>
+
+      <div class="form-field">
+        <label for="notes">Remarques</label>
+        <textarea
+          id="notes"
+          formControlName="notes"
+          placeholder="Produits utilises, conditions particulieres, notes importantes..."
+        ></textarea>
+        <div class="form-hint">Optionnel</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Photos -->
+    <div class="form-section photos-section">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Preuves visuelles</h2>
+      </div>
+
+      <div class="photo-tabs">
+        <button
+          type="button"
+          class="photo-tab active"
+          [class.active]="selectedPhotoTab() === 'before'"
+          (click)="selectedPhotoTab.set('before')"
+        >
+          Avant
+        </button>
+        <button
+          type="button"
+          class="photo-tab"
+          [class.active]="selectedPhotoTab() === 'after'"
+          (click)="selectedPhotoTab.set('after')"
+        >
+          Apres
+        </button>
+      </div>
+
+      <!-- Before Photos -->
+      @if (selectedPhotoTab() === 'before') {
+        <label for="beforePhotosInput" class="upload-zone">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Ajouter des photos</div>
+          <div class="upload-subtext">Avant intervention</div>
+        </label>
+        <input
+          type="file"
+          id="beforePhotosInput"
+          accept="image/*"
+          capture="environment"
+          multiple
+          (change)="onFilesSelected($event, 'before')"
+          class="file-input-hidden"
+        />
+        @if (beforePhotos().length > 0) {
+          <div class="photo-gallery">
+            @for (photo of beforePhotos(); track photo.url; let i = $index) {
+              <div class="photo-item">
+                <img [src]="photo.url" alt="Photo avant" />
+                <button
+                  type="button"
+                  class="btn-delete"
+                  (click)="removePhoto('before', i)"
+                  aria-label="Supprimer la photo"
+                >
+                  ×
+                </button>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- After Photos -->
+      @if (selectedPhotoTab() === 'after') {
+        <label for="afterPhotosInput" class="upload-zone">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Ajouter des photos</div>
+          <div class="upload-subtext">Apres intervention</div>
+        </label>
+        <input
+          type="file"
+          id="afterPhotosInput"
+          accept="image/*"
+          capture="environment"
+          multiple
+          (change)="onFilesSelected($event, 'after')"
+          class="file-input-hidden"
+        />
+        @if (afterPhotos().length > 0) {
+          <div class="photo-gallery">
+            @for (photo of afterPhotos(); track photo.url; let i = $index) {
+              <div class="photo-item">
+                <img [src]="photo.url" alt="Photo apres" />
+                <button
+                  type="button"
+                  class="btn-delete"
+                  (click)="removePhoto('after', i)"
+                  aria-label="Supprimer la photo"
+                >
+                  ×
+                </button>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Messages -->
+    @if (errorMessage()) {
+      <div class="alert error" role="alert">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <strong class="alert-title">Erreur</strong>
+          <p class="alert-message">{{ errorMessage() }}</p>
+        </div>
+        <button type="button" class="alert-close" (click)="errorMessage.set(null)" aria-label="Fermer">
+          ×
+        </button>
+      </div>
+    }
+
+    @if (result()) {
+      <div class="alert success" role="alert">
+        <div class="alert-icon">✓</div>
+        <div class="alert-content">
+          <strong class="alert-title">Succes!</strong>
+          <p class="alert-message">Rapport envoye avec succes.</p>
+        </div>
+        <button type="button" class="alert-close" (click)="result.set(null)" aria-label="Fermer">
+          ×
+        </button>
+      </div>
+    }
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Annuler
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner"></span>
+          Envoi en cours...
+        } @else {
+          Envoyer le rapport
+        }
+      </button>
+    </div>
+  </form>
+</div>

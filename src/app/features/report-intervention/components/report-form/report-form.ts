@@ -31,6 +31,7 @@ export class ReportForm {
 
   readonly beforePhotos = signal<PhotoPreview[]>([]);
   readonly afterPhotos = signal<PhotoPreview[]>([]);
+  readonly selectedPhotoTab = signal<'before' | 'after'>('before');
 
   readonly form = this.fb.group({
     siteName: ['', [Validators.required]],
@@ -100,11 +101,12 @@ export class ReportForm {
       });
   }
 
-  private resetForm(): void {
+  resetForm(): void {
     this.beforePhotos().forEach((p) => URL.revokeObjectURL(p.url));
     this.afterPhotos().forEach((p) => URL.revokeObjectURL(p.url));
     this.beforePhotos.set([]);
     this.afterPhotos.set([]);
+    this.selectedPhotoTab.set('before');
     this.form.reset({ interventionDate: todayIsoDate(), notes: '' });
   }
 
