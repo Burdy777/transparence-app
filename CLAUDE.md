@@ -10,7 +10,7 @@ UI text is French (unaccented, e.g. `apres`, `rapport envoye`). Keep new user-fa
 ## Stack
 - Angular 22 with standalone components and zoneless change detection
 - NgRx SignalStore (@ngrx/signals) for all shared/feature state
-- Bootstrap 5.3 via SCSS - NO Angular Material, NO Tailwind
+- Angular Material, NO Tailwind OR Bootstrap
 - RxJS for async operations; convert to signals at component boundary with toSignal()
 - Angular Eslint for lint
 - TypeScript strict mode enforced
