@@ -1,4 +1,7 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Reports } from '../../../../core/services/reports';
 import { CreateReportResult } from '../../../../core/models/report.model';
@@ -16,7 +19,7 @@ function todayIsoDate(): string {
 
 @Component({
   selector: 'app-report-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, MatProgressBarModule],
   templateUrl: './report-form.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './report-form.scss',
@@ -39,6 +42,49 @@ export class ReportForm {
     interventionDate: [todayIsoDate(), [Validators.required]],
     notes: [''],
   });
+
+  // Snapshot reactif des valeurs du formulaire : dans une app zoneless, un
+  // template ne se rafraichit pas sur les changements de reactive form sans ce
+  // pont RxJS -> signal. Sert a l'entete dynamique et a la barre de progression.
+  private readonly formValue = toSignal(this.form.valueChanges, {
+    initialValue: this.form.getRawValue(),
+  });
+
+  // Progression = 5 etapes obligatoires (chantier, adresse, date, 1 photo avant,
+  // 1 photo apres). Les notes sont optionnelles et n'entrent pas dans le calcul.
+  readonly progress = computed(() => {
+    const value = this.formValue();
+    const steps = [
+      !!value.siteName,
+      !!value.address,
+      !!value.interventionDate,
+      this.beforePhotos().length > 0,
+      this.afterPhotos().length > 0,
+    ];
+    const done = steps.filter(Boolean).length;
+    return Math.round((done / steps.length) * 100);
+  });
+
+  // Message contextuel sous la barre : indique la prochaine action manquante.
+  readonly progressLabel = computed(() => {
+    const value = this.formValue();
+    if (this.progress() === 100) {
+      return 'Pret a envoyer';
+    }
+    if (!value.siteName || !value.address) {
+      return 'Completez les infos du chantier';
+    }
+    if (this.beforePhotos().length === 0) {
+      return 'Ajoutez une photo avant';
+    }
+    if (this.afterPhotos().length === 0) {
+      return 'Plus qu une photo apres pour terminer';
+    }
+    return 'Encore quelques informations';
+  });
+
+  // Titre de l'entete : nom du chantier saisi, ou libelle par defaut.
+  readonly headerTitle = computed(() => this.formValue().siteName || 'Nouveau chantier');
 
   onFilesSelected(event: Event, category: 'before' | 'after'): void {
     const input = event.target as HTMLInputElement;

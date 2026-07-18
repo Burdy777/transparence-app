@@ -1,0 +1,279 @@
+// =============================================================================
+// Styles globaux reutilisables de l'app mobile.
+//
+// La page Intervention (report-form) sert de reference visuelle. Les tokens
+// --rp-* et les patterns structurels (page mobile, app-bar + bouton retour,
+// champs de formulaire, boutons, messages) sont extraits ici pour etre
+// partages par toutes les pages du parcours (accueil, anomalie, etc.).
+//
+// Regle : ce fichier ne contient que du GENERIQUE. Le specifique a une page
+// (blocs photo avant/apres, barre de progression Material...) reste dans le
+// .scss du composant concerne.
+// =============================================================================
+
+// ---- Tokens de theme (palette bleue de reference) ----------------------------
+// Definis sur :root pour etre disponibles partout. Noms identiques a ceux
+// utilises historiquement par report-form (--rp-*) afin que sa globalisation
+// n'altere pas son rendu d'un pixel.
+:root {
+  --rp-bg: #f8fafd;
+  --rp-surface: #ffffff;
+  --rp-surface-2: #f5f8fc;
+  --rp-ink: #16202b;
+  --rp-muted: #5a6675;
+  --rp-faint: #8791a0;
+  --rp-line: #e2e7ef;
+  --rp-line-strong: #d2dae6;
+  --rp-primary: #2563b8;
+  --rp-primary-deep: #17458a;
+  --rp-primary-light: #6ba3ee;
+  --rp-primary-soft: #dce8fb;
+  --rp-danger: #c0392b;
+  --rp-danger-soft: #fbeae8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rp-bg: #0e141d;
+    --rp-surface: #111823;
+    --rp-surface-2: #151d29;
+    --rp-primary-light: #f8fafd8c;
+    --rp-ink: #e6edf6;
+    --rp-muted: #94a1b3;
+    --rp-faint: #6b7688;
+    --rp-line: #1f2a38;
+    --rp-line-strong: #293646;
+    --rp-primary: #4d91f0;
+    --rp-primary-deep: #6ba7f5;
+    --rp-primary-soft: #12253f;
+    --rp-danger: #f0857a;
+    --rp-danger-soft: #351a17;
+  }
+}
+
+// ---- Coquille de page mobile -------------------------------------------------
+// Colonne centree, pleine hauteur, largeur max telephone. Utilisee par chaque
+// page racine du parcours.
+.rp-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 440px;
+  margin: 0 auto;
+  background: var(--rp-bg);
+  color: var(--rp-ink);
+}
+
+// ---- App-bar + bouton retour -------------------------------------------------
+.rp-appbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--rp-surface);
+  border-bottom: 1px solid var(--rp-line);
+
+  .rp-back {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--rp-line);
+    background: var(--rp-surface-2);
+    display: grid;
+    place-items: center;
+    flex: none;
+    color: var(--rp-ink);
+
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+  }
+
+  .rp-titles {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    .rp-sub {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--rp-faint);
+      font-weight: 600;
+    }
+
+    .rp-main {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// ---- Libelle de section ------------------------------------------------------
+.rp-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 -4px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rp-faint);
+  font-weight: 700;
+
+  .rp-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--rp-primary-light);
+  }
+}
+
+// ---- Zone de contenu scrollable ----------------------------------------------
+.rp-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 12px 20px 20px;
+}
+
+// ---- Champ de formulaire (label flottant sur la bordure) ---------------------
+.rp-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    position: absolute;
+    top: -7px;
+    left: 12px;
+    padding: 0 6px;
+    // Le label chevauche la bordure haute du champ : degrade 50/50 pour eviter
+    // un halo blanc sur le fond teinte de la page.
+    background: linear-gradient(180deg, var(--rp-bg) 50%, var(--rp-surface) 50%);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--rp-muted);
+    pointer-events: none;
+  }
+
+  .rp-val {
+    width: 100%;
+    border: 1.5px solid var(--rp-line-strong);
+    border-radius: 13px;
+    padding: 15px 14px;
+    font-size: 15px;
+    color: var(--rp-ink);
+    background: var(--rp-surface);
+    font-weight: 500;
+    resize: vertical;
+
+    &::placeholder {
+      color: var(--rp-faint);
+      font-weight: 400;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--rp-primary-light);
+      box-shadow: 0 0 0 3px var(--rp-primary-soft);
+    }
+  }
+
+  &:focus-within label {
+    color: var(--rp-primary-light);
+  }
+}
+
+// ---- Messages ----------------------------------------------------------------
+.rp-form-error {
+  color: var(--rp-danger);
+  background: var(--rp-danger-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rp-form-success {
+  color: var(--rp-primary);
+  background: var(--rp-primary-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+// ---- Boutons -----------------------------------------------------------------
+// CTA principal, colle en bas d'un ecran de formulaire.
+.rp-cta-wrap {
+  position: sticky;
+  bottom: 0;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, var(--rp-surface) 72%, transparent);
+  border-top: 1px solid var(--rp-line);
+}
+
+.rp-cta {
+  width: 100%;
+  border: none;
+  border-radius: 15px;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--rp-primary), var(--rp-primary-deep));
+  color: #fff;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  box-shadow: 0 12px 24px -12px color-mix(in srgb, var(--rp-primary) 80%, transparent);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+// Bouton secondaire (contour), pour actions non primaires.
+.rp-btn-secondary {
+  width: 100%;
+  border: 1.5px solid var(--rp-line-strong);
+  border-radius: 15px;
+  padding: 15px;
+  background: var(--rp-surface);
+  color: var(--rp-ink);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}

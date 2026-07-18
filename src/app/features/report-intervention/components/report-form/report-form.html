@@ -1,61 +1,146 @@
-<div class="report-page">
+<div class="rp-page">
   <form class="report-form" [formGroup]="form" (ngSubmit)="submit()">
-    <h1>Nouveau rapport de chantier</h1>
-
-    <label for="siteName">Nom du chantier</label>
-    <input id="siteName" type="text" formControlName="siteName" placeholder="Ex: Residence Les Tilleuls" />
-
-    <label for="address">Adresse</label>
-    <input id="address" type="text" formControlName="address" placeholder="Ex: 12 rue des Lilas, Paris" />
-
-    <label for="interventionDate">Date d'intervention</label>
-    <input id="interventionDate" type="date" formControlName="interventionDate" />
-
-    <label for="notes">Notes (optionnel)</label>
-    <textarea id="notes" formControlName="notes" rows="3" placeholder="Remarques, produits utilises..."></textarea>
-
-    <fieldset class="photo-section">
-      <legend>Photos avant intervention</legend>
-      <label class="photo-picker">
-        <input type="file" accept="image/*" capture="environment" multiple (change)="onFilesSelected($event, 'before')" />
-        + Ajouter des photos
-      </label>
-      <div class="photo-grid">
-        @for (photo of beforePhotos(); track photo.url; let i = $index) {
-          <div class="photo-thumb">
-            <img [src]="photo.url" alt="Photo avant" />
-            <button type="button" class="remove-btn" (click)="removePhoto('before', i)">×</button>
-          </div>
-        }
+    <header class="rp-appbar">
+      <a class="rp-back" routerLink="/accueil" aria-label="Retour a l'accueil">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </a>
+      <div class="rp-titles">
+        <span class="rp-sub">Nouveau rapport</span>
+        <span class="rp-main">{{ headerTitle() }}</span>
       </div>
-    </fieldset>
+      <span class="draft">Brouillon</span>
+    </header>
 
-    <fieldset class="photo-section">
-      <legend>Photos apres intervention</legend>
-      <label class="photo-picker">
-        <input type="file" accept="image/*" capture="environment" multiple (change)="onFilesSelected($event, 'after')" />
-        + Ajouter des photos
-      </label>
-      <div class="photo-grid">
-        @for (photo of afterPhotos(); track photo.url; let i = $index) {
-          <div class="photo-thumb">
-            <img [src]="photo.url" alt="Photo apres" />
-            <button type="button" class="remove-btn" (click)="removePhoto('after', i)">×</button>
-          </div>
-        }
+    <!-- "rp-progress-wrap" et non "progress" : ce dernier est une classe Bootstrap
+         (flex + overflow hidden) qui casserait la barre et masquerait le texte. -->
+    <div class="rp-progress-wrap">
+      <mat-progress-bar class="rp-progress" mode="determinate" [value]="progress()"></mat-progress-bar>
+      <p class="cap">{{ progressLabel() }}</p>
+    </div>
+
+    <div class="rp-content">
+      <p class="rp-section-label"><span class="rp-dot"></span>Chantier</p>
+
+      <div class="rp-field">
+        <label for="siteName">Nom du chantier</label>
+        <input
+          id="siteName"
+          class="rp-val"
+          type="text"
+          formControlName="siteName"
+          placeholder="Ex: Residence Les Tilleuls"
+        />
       </div>
-    </fieldset>
 
-    @if (errorMessage()) {
-      <p class="form-error">{{ errorMessage() }}</p>
-    }
+      <div class="rp-field">
+        <label for="address">Adresse</label>
+        <input
+          id="address"
+          class="rp-val"
+          type="text"
+          formControlName="address"
+          placeholder="Ex: 12 rue des Lilas, Paris"
+        />
+      </div>
 
-    @if (result()) {
-      <p class="form-success">Rapport envoye avec succes.</p>
-    }
+      <div class="rp-field">
+        <label for="interventionDate">Date d'intervention</label>
+        <input id="interventionDate" class="rp-val" type="date" formControlName="interventionDate" />
+      </div>
 
-    <button type="submit" class="submit-btn" [disabled]="loading()">
-      {{ loading() ? 'Envoi en cours...' : 'Envoyer le rapport' }}
-    </button>
+      <div class="rp-field">
+        <label for="notes">Notes (optionnel)</label>
+        <textarea
+          id="notes"
+          class="rp-val"
+          formControlName="notes"
+          rows="3"
+          placeholder="Remarques, produits utilises..."
+        ></textarea>
+      </div>
+
+      <p class="rp-section-label"><span class="rp-dot before"></span>Preuves photo</p>
+
+      <fieldset class="photo-block before">
+        <div class="photo-head">
+          <span class="tag">Avant</span>
+          <span class="count">{{ beforePhotos().length }} photo(s)</span>
+        </div>
+        <div class="grid">
+          @for (photo of beforePhotos(); track photo.url; let i = $index) {
+            <div class="thumb">
+              <img [src]="photo.url" alt="Photo avant" />
+              <button type="button" class="rm" (click)="removePhoto('before', i)" aria-label="Retirer la photo">
+                &times;
+              </button>
+            </div>
+          }
+          <label class="add">
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              multiple
+              (change)="onFilesSelected($event, 'before')"
+            />
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Ajouter</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="photo-block after">
+        <div class="photo-head">
+          <span class="tag">Apres</span>
+          <span class="count">{{ afterPhotos().length }} photo(s)</span>
+        </div>
+        <div class="grid">
+          @for (photo of afterPhotos(); track photo.url; let i = $index) {
+            <div class="thumb">
+              <img [src]="photo.url" alt="Photo apres" />
+              <button type="button" class="rm" (click)="removePhoto('after', i)" aria-label="Retirer la photo">
+                &times;
+              </button>
+            </div>
+          }
+          <label class="add">
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              multiple
+              (change)="onFilesSelected($event, 'after')"
+            />
+               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Ajouter</span>
+          </label>
+        </div>
+      </fieldset>
+
+      @if (errorMessage()) {
+        <p class="rp-form-error">{{ errorMessage() }}</p>
+      }
+
+      @if (result()) {
+        <p class="rp-form-success">Rapport envoye avec succes.</p>
+      }
+    </div>
+
+    <div class="rp-cta-wrap">
+      <button type="submit" class="rp-cta" [disabled]="loading()">
+        @if (!loading()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        }
+        {{ loading() ? 'Envoi en cours...' : 'Envoyer le rapport' }}
+      </button>
+    </div>
   </form>
 </div>
