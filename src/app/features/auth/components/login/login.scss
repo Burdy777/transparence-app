@@ -1,75 +1,72 @@
+// Styles SPECIFIQUES a la page de connexion.
+//
+// La coquille (.rp-page), les champs (.rp-field/.rp-val), le bouton (.rp-cta) et
+// les messages (.rp-form-error) viennent des classes globales
+// (src/styles/_app-shell.scss). Ici : centrage vertical, logo et bloc marque,
+// pas de header ni de footer.
 .login-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
+  // Contenu centre verticalement, sans app-bar ni CTA colle en bas.
   justify-content: center;
-  padding: var(--spacing);
+  padding: 24px 22px calc(24px + env(safe-area-inset-bottom));
 }
 
-.login-card {
-  width: 100%;
-  max-width: 360px;
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+.login-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+// ---- Marque (logo + titre) ----
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 8px;
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--rp-primary), var(--rp-primary-deep));
+    box-shadow: 0 12px 24px -12px color-mix(in srgb, var(--rp-primary) 80%, transparent);
+    margin-bottom: 16px;
+
+    svg {
+      width: 30px;
+      height: 30px;
+      stroke: #fff;
+    }
+  }
 
   h1 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--rp-ink);
   }
 
   .subtitle {
-    color: var(--color-muted);
-    margin: 0 0 20px;
-  }
-
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    margin-top: 14px;
-  }
-
-  input {
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-  }
-
-  .field-error {
-    color: var(--color-danger);
-    font-size: 0.8rem;
+    font-size: 13px;
+    color: var(--rp-muted);
     margin: 4px 0 0;
+    font-weight: 500;
   }
+}
 
-  .form-error {
-    color: var(--color-danger);
-    background: #fbeae8;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 16px;
-    font-size: 0.9rem;
-  }
+// Erreur de validation d'un champ (sous le champ, avant le suivant).
+// Marge negative pour compenser le gap du formulaire et coller au champ.
+.field-error {
+  color: var(--rp-danger);
+  font-size: 12px;
+  font-weight: 500;
+  margin: -12px 0 0 2px;
+}
 
-  button {
-    margin-top: 22px;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--color-primary);
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-
-    &:disabled {
-      opacity: 0.6;
-    }
-
-    &:not(:disabled):active {
-      background: var(--color-primary-dark);
-    }
-  }
+// Le CTA de connexion n'est pas colle en bas : espace au-dessus.
+.rp-cta {
+  margin-top: 4px;
 }

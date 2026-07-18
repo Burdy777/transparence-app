@@ -1,25 +1,51 @@
-<div class="login-page">
-  <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
-    <h1>Rapports de chantier</h1>
-    <p class="subtitle">Connexion agent</p>
+<div class="rp-page login-page">
+  <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 4h6a2 2 0 0 1 2 2v0h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1v0a2 2 0 0 1 2-2z" />
+          <path d="M9 4a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1" />
+          <path d="M9 13l2 2 4-4" />
+        </svg>
+      </div>
+      <h1>Rapports de chantier</h1>
+      <p class="subtitle">Connexion agent</p>
+    </div>
 
-    <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" autocomplete="username" placeholder="agent@exemple.com" />
+    <div class="rp-field">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        class="rp-val"
+        type="email"
+        formControlName="email"
+        autocomplete="username"
+        placeholder="agent@exemple.com"
+      />
+    </div>
     @if (form.controls.email.touched && form.controls.email.invalid) {
       <p class="field-error">Email valide requis</p>
     }
 
-    <label for="password">Mot de passe</label>
-    <input id="password" type="password" formControlName="password" autocomplete="current-password" />
+    <div class="rp-field">
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        class="rp-val"
+        type="password"
+        formControlName="password"
+        autocomplete="current-password"
+      />
+    </div>
     @if (form.controls.password.touched && form.controls.password.invalid) {
       <p class="field-error">Mot de passe requis</p>
     }
 
     @if (errorMessage()) {
-      <p class="form-error">{{ errorMessage() }}</p>
+      <p class="rp-form-error">{{ errorMessage() }}</p>
     }
 
-    <button type="submit" [disabled]="loading()">
+    <button type="submit" class="rp-cta" [disabled]="loading()">
       {{ loading() ? 'Connexion...' : 'Se connecter' }}
     </button>
   </form>

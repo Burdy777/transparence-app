@@ -1,0 +1,67 @@
+<div class="rp-page home-page">
+  <header class="home-head">
+    <div class="greeting">
+      <span class="hello">Bonjour</span>
+      <span class="name">{{ agentName() }}</span>
+    </div>
+    <button type="button" class="logout" (click)="logout()" aria-label="Se deconnecter">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <path d="M16 17l5-5-5-5M21 12H9" />
+      </svg>
+    </button>
+  </header>
+
+  <div class="rp-content">
+    <p class="rp-section-label"><span class="rp-dot"></span>Que voulez-vous faire ?</p>
+
+    <a class="action-card intervention" routerLink="/nouveau-rapport">
+      <span class="ac-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 4h6a2 2 0 0 1 2 2v0h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1v0a2 2 0 0 1 2-2z" />
+          <path d="M9 13l2 2 4-4" />
+        </svg>
+      </span>
+      <span class="ac-text">
+        <span class="ac-title">Ajouter une intervention</span>
+        <span class="ac-sub">Rapport de chantier avec photos</span>
+      </span>
+      <svg class="ac-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </a>
+
+    <a class="action-card anomalie" routerLink="/anomalie">
+      <span class="ac-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+          <path d="M12 9v4M12 17h.01" />
+        </svg>
+      </span>
+      <span class="ac-text">
+        <span class="ac-title">Ajouter une anomalie</span>
+        <span class="ac-sub">Signaler un probleme sur site</span>
+      </span>
+      <svg class="ac-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </a>
+
+    <a class="action-card historique" routerLink="/historique">
+      <span class="ac-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v5h5" />
+          <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+          <path d="M12 7v5l4 2" />
+        </svg>
+      </span>
+      <span class="ac-text">
+        <span class="ac-title">Historique</span>
+        <span class="ac-sub">Vos envois recents</span>
+      </span>
+      <svg class="ac-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </a>
+  </div>
+</div>

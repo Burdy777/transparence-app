@@ -1,38 +1,62 @@
-<div class="history-page">
-  <h1>Historique (cet appareil)</h1>
-  <p class="hint">
-    Ces rapports ont bien ete transmis au serveur ; cette liste n'affiche que ceux envoyes depuis cet appareil.
-  </p>
+<div class="rp-page">
+  <header class="rp-appbar">
+    <a class="rp-back" routerLink="/accueil" aria-label="Retour a l'accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </a>
+    <div class="rp-titles">
+      <span class="rp-sub">Cet appareil</span>
+      <span class="rp-main">Historique</span>
+    </div>
+  </header>
 
-  @if (entries().length === 0) {
-    <p class="empty">Aucun rapport envoye depuis cet appareil pour le moment.</p>
-  }
+  <div class="rp-content">
+    <p class="hint">
+      Ces envois ont bien ete transmis au serveur ; cette liste n'affiche que ceux effectues depuis cet appareil.
+    </p>
 
-  @for (entry of entries(); track entry.submittedAt) {
-    <article class="entry-card">
-      <header>
-        <h2>{{ entry.siteName }}</h2>
-        <span class="date">{{ entry.interventionDate }}</span>
-      </header>
+    @if (entries().length === 0) {
+      <p class="empty">Aucun envoi depuis cet appareil pour le moment.</p>
+    }
 
-      <div class="photo-columns">
-        <div>
-          <h3>Avant</h3>
-          <div class="photo-grid">
-            @for (photo of entry.beforePhotos; track photo.fileId) {
-              <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
-            }
+    @for (entry of entries(); track entry.submittedAt) {
+      @if (isAnomaly(entry)) {
+        <article class="entry-card anomalie">
+          <div class="entry-head">
+            <span class="badge anomalie">Anomalie</span>
+            <span class="sev">Gravite : {{ entry.severity }}</span>
           </div>
-        </div>
-        <div>
-          <h3>Apres</h3>
-          <div class="photo-grid">
-            @for (photo of entry.afterPhotos; track photo.fileId) {
-              <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
-            }
+          <h2>{{ entry.siteName }}</h2>
+        </article>
+      } @else {
+        <article class="entry-card intervention">
+          <div class="entry-head">
+            <span class="badge intervention">Intervention</span>
+            <span class="date">{{ entry.interventionDate }}</span>
           </div>
-        </div>
-      </div>
-    </article>
-  }
+          <h2>{{ entry.siteName }}</h2>
+
+          <div class="photo-columns">
+            <div class="col">
+              <h3>Avant</h3>
+              <div class="links">
+                @for (photo of entry.beforePhotos; track photo.fileId) {
+                  <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
+                }
+              </div>
+            </div>
+            <div class="col">
+              <h3>Apres</h3>
+              <div class="links">
+                @for (photo of entry.afterPhotos; track photo.fileId) {
+                  <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
+                }
+              </div>
+            </div>
+          </div>
+        </article>
+      }
+    }
+  </div>
 </div>

@@ -1,71 +1,122 @@
-.history-page {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: var(--spacing);
+// Styles SPECIFIQUES a la page Historique.
+//
+// Coquille, app-bar et contenu viennent des classes globales
+// (src/styles/_app-shell.scss). Ici : texte d'aide, etat vide, cartes d'entree
+// (intervention / anomalie).
+.rp-page {
+  --hist-anomalie: #c98a3c;
+  --hist-anomalie-soft: #f6ecdb;
+  --hist-intervention: #1499c9;
+  --hist-intervention-soft: #d7effa;
+}
 
-  h1 {
-    font-size: 1.2rem;
-    margin: 0 0 4px;
-  }
-
-  .hint {
-    color: var(--color-muted);
-    font-size: 0.85rem;
-    margin: 0 0 20px;
-  }
-
-  .empty {
-    color: var(--color-muted);
+@media (prefers-color-scheme: dark) {
+  .rp-page {
+    --hist-anomalie: #d59b52;
+    --hist-anomalie-soft: #2c2417;
+    --hist-intervention: #38b6e0;
+    --hist-intervention-soft: #102a3a;
   }
 }
 
+.hint {
+  font-size: 12.5px;
+  color: var(--rp-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.empty {
+  font-size: 14px;
+  color: var(--rp-faint);
+  text-align: center;
+  padding: 32px 12px;
+  margin: 0;
+}
+
+// ---- Carte d'entree ----
 .entry-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 14px;
+  border: 1.5px solid var(--rp-line);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--rp-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
-  header {
+  .entry-head {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 10px;
+    align-items: center;
+    gap: 8px;
+  }
 
-    h2 {
-      font-size: 1rem;
-      margin: 0;
+  .badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+
+    &.intervention {
+      color: var(--hist-intervention);
+      background: var(--hist-intervention-soft);
     }
 
-    .date {
-      color: var(--color-muted);
-      font-size: 0.8rem;
+    &.anomalie {
+      color: var(--hist-anomalie);
+      background: var(--hist-anomalie-soft);
     }
   }
 
-  h3 {
-    font-size: 0.8rem;
+  .date,
+  .sev {
+    font-size: 12px;
+    color: var(--rp-muted);
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--rp-ink);
+  }
+}
+
+.entry-card.anomalie {
+  border-color: color-mix(in srgb, var(--hist-anomalie) 30%, var(--rp-line));
+}
+
+// ---- Colonnes photo (intervention) ----
+.photo-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  .col h3 {
+    font-size: 11px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--rp-faint);
+    font-weight: 700;
     margin: 0 0 6px;
   }
 
-  .photo-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .photo-grid {
+  .links {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
 
     a {
-      font-size: 0.8rem;
-      padding: 4px 8px;
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--rp-primary);
+      background: var(--rp-primary-soft);
+      padding: 5px 10px;
+      border-radius: 8px;
       text-decoration: none;
     }
   }

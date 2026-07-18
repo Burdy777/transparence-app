@@ -36,7 +36,10 @@ export class Login {
     this.auth.login(email!, password!).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/nouveau-rapport']);
+        // replaceUrl : la connexion ne doit pas rester dans l'historique. Apres
+        // login, le bouton Retour du navigateur/telephone ne doit pas ramener
+        // ici (cf. parcours mobile).
+        this.router.navigate(['/accueil'], { replaceUrl: true });
       },
       error: () => {
         this.loading.set(false);

@@ -1,0 +1,156 @@
+// Styles SPECIFIQUES a la page d'accueil.
+//
+// Coquille, contenu et libelle de section viennent des classes globales
+// (src/styles/_app-shell.scss). Ici : entete de salutation, bouton deconnexion,
+// et cartes d'action tactiles.
+.home-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px 6px;
+
+  .greeting {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    .hello {
+      font-size: 13px;
+      color: var(--rp-muted);
+      font-weight: 500;
+    }
+
+    .name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--rp-ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .logout {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--rp-line);
+    background: var(--rp-surface);
+    color: var(--rp-muted);
+    display: grid;
+    place-items: center;
+    flex: none;
+    cursor: pointer;
+
+    svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+    }
+  }
+}
+
+// ---- Cartes d'action ----
+// Grandes zones tactiles : icone teintee, texte, chevron. Retour visuel a
+// l'appui (:active) adapte au mobile.
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1.5px solid var(--rp-line);
+  background: var(--rp-surface);
+  color: var(--rp-ink);
+  text-decoration: none;
+  transition:
+    transform 0.08s ease,
+    border-color 0.12s ease;
+
+  &:active {
+    transform: scale(0.98);
+    border-color: var(--rp-line-strong);
+  }
+
+  .ac-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    flex: none;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .ac-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .ac-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .ac-sub {
+      font-size: 12.5px;
+      color: var(--rp-muted);
+      font-weight: 500;
+    }
+  }
+
+  .ac-chevron {
+    width: 20px;
+    height: 20px;
+    stroke: var(--rp-faint);
+    flex: none;
+  }
+}
+
+// Teintes d'icone par action. Intervention = bleu marque ; anomalie = orange
+// (accent "avant" du projet, connote l'alerte) ; historique = bleu clair.
+.action-card.intervention .ac-icon {
+  background: var(--rp-primary-soft);
+  svg {
+    stroke: var(--rp-primary);
+  }
+}
+
+.action-card.anomalie .ac-icon {
+  background: #f6ecdb;
+  svg {
+    stroke: #c98a3c;
+  }
+}
+
+.action-card.historique .ac-icon {
+  background: #d7effa;
+  svg {
+    stroke: #1499c9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .action-card.anomalie .ac-icon {
+    background: #2c2417;
+    svg {
+      stroke: #d59b52;
+    }
+  }
+
+  .action-card.historique .ac-icon {
+    background: #102a3a;
+    svg {
+      stroke: #38b6e0;
+    }
+  }
+}
