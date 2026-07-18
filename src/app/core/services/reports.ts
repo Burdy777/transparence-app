@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -15,7 +15,7 @@ export interface ReportFormValue {
   providedIn: 'root',
 })
 export class Reports {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   create(form: ReportFormValue, beforePhotos: File[], afterPhotos: File[]): Observable<CreateReportResult> {
     const formData = new FormData();

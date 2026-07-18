@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -11,9 +11,9 @@ const AGENT_KEY = 'chantier_app_agent';
   providedIn: 'root',
 })
 export class Auth {
-  readonly currentAgent = signal<Agent | null>(this.readStoredAgent());
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  readonly currentAgent = signal<Agent | null>(this.readStoredAgent());
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, { email, password }).pipe(
