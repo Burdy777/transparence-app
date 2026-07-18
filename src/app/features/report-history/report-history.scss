@@ -1,0 +1,72 @@
+.history-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--spacing);
+
+  h1 {
+    font-size: 1.2rem;
+    margin: 0 0 4px;
+  }
+
+  .hint {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    margin: 0 0 20px;
+  }
+
+  .empty {
+    color: var(--color-muted);
+  }
+}
+
+.entry-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+
+    h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .date {
+      color: var(--color-muted);
+      font-size: 0.8rem;
+    }
+  }
+
+  h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 6px;
+  }
+
+  .photo-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    a {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      text-decoration: none;
+    }
+  }
+}

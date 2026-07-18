@@ -1,0 +1,38 @@
+<div class="history-page">
+  <h1>Historique (cet appareil)</h1>
+  <p class="hint">
+    Ces rapports ont bien ete transmis au serveur ; cette liste n'affiche que ceux envoyes depuis cet appareil.
+  </p>
+
+  @if (entries().length === 0) {
+    <p class="empty">Aucun rapport envoye depuis cet appareil pour le moment.</p>
+  }
+
+  @for (entry of entries(); track entry.submittedAt) {
+    <article class="entry-card">
+      <header>
+        <h2>{{ entry.siteName }}</h2>
+        <span class="date">{{ entry.interventionDate }}</span>
+      </header>
+
+      <div class="photo-columns">
+        <div>
+          <h3>Avant</h3>
+          <div class="photo-grid">
+            @for (photo of entry.beforePhotos; track photo.fileId) {
+              <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
+            }
+          </div>
+        </div>
+        <div>
+          <h3>Apres</h3>
+          <div class="photo-grid">
+            @for (photo of entry.afterPhotos; track photo.fileId) {
+              <a [href]="photo.webViewLink" target="_blank" rel="noopener">Photo</a>
+            }
+          </div>
+        </div>
+      </div>
+    </article>
+  }
+</div>

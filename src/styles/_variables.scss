@@ -1,0 +1,18 @@
+// Override Bootstrap defaults BEFORE the import
+$primary:          #0d6efd;
+$secondary:        #6c757d;
+$font-family-base: 'Inter', system-ui, sans-serif;
+$border-radius:    0.5rem;
+$border-radius-lg: 0.75rem;
+
+// Grid customization
+$grid-gutter-width: 1.5rem;
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1200px,
+  xxl: 1400px
+);
+// Import all Bootstrap
+@import 'bootstrap/scss/bootstrap';
