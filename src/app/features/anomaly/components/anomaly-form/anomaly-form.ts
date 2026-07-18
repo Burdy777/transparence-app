@@ -1,5 +1,7 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AnomalySeverity } from '../../models/anomaly.model';
 
@@ -10,7 +12,7 @@ interface PhotoPreview {
 
 @Component({
   selector: 'app-anomaly-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MatProgressBarModule],
   templateUrl: './anomaly-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './anomaly-form.scss',
@@ -37,6 +39,42 @@ export class AnomalyForm {
     address: ['', [Validators.required]],
     severity: ['moyenne' as AnomalySeverity, [Validators.required]],
     comment: ['', [Validators.required]],
+  });
+
+  // Snapshot reactif des valeurs du formulaire : dans une app zoneless, un
+  // template ne se rafraichit pas sur les changements de reactive form sans ce
+  // pont RxJS -> signal. Sert a la barre de progression (meme pattern que
+  // report-form).
+  private readonly formValue = toSignal(this.form.valueChanges, {
+    initialValue: this.form.getRawValue(),
+  });
+
+  // Progression = 4 etapes obligatoires (chantier, adresse, commentaire, 1
+  // photo). La gravite a toujours une valeur par defaut donc n'entre pas dans
+  // le calcul.
+  readonly progress = computed(() => {
+    const value = this.formValue();
+    const steps = [!!value.siteName, !!value.address, !!value.comment, this.photos().length > 0];
+    const done = steps.filter(Boolean).length;
+    return Math.round((done / steps.length) * 100);
+  });
+
+  // Message contextuel sous la barre : indique la prochaine action manquante.
+  readonly progressLabel = computed(() => {
+    const value = this.formValue();
+    if (this.progress() === 100) {
+      return 'Pret a enregistrer';
+    }
+    if (!value.siteName || !value.address) {
+      return 'Completez la localisation';
+    }
+    if (!value.comment) {
+      return 'Decrivez l anomalie';
+    }
+    if (this.photos().length === 0) {
+      return 'Ajoutez une photo';
+    }
+    return 'Encore quelques informations';
   });
 
   onFilesSelected(event: Event): void {

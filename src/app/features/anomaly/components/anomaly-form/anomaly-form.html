@@ -12,6 +12,11 @@
       </div>
     </header>
 
+    <div class="rp-progress-wrap">
+      <mat-progress-bar class="rp-progress" mode="determinate" [value]="progress()"></mat-progress-bar>
+      <p class="cap">{{ progressLabel() }}</p>
+    </div>
+
     <div class="rp-content">
       <p class="rp-section-label"><span class="rp-dot alert"></span>Localisation</p>
 
