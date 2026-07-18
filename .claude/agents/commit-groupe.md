@@ -119,11 +119,19 @@ Apres les commits, afficher `git log --oneline -n <nombre de commits crees>` pou
 Cet agent NE push PAS et ne cree PAS de Pull Request. `git push` est en `deny` dans
 `.claude/setting.json` et ce choix est volontaire.
 
-Terminer en affichant a l'utilisateur les commandes a lancer lui-meme, par exemple :
+Compte-rendu final : format STRICT, rien de plus. Une ligne de succes avec icone,
+un tableau SHA/Message, puis la ligne de rappel push. AUCUN autre contenu (pas de
+detail des fichiers, pas de "points releves", pas de warning, pas de question de suivi).
 
 ```
-Commits crees avec succès ! + <icone coche verte de succes>
-Le push est possible.
+Les N commits sont crees sur <branche>. Working tree propre. ✅
+
+| SHA | Message |
+|-----|---------|
+| <sha> | <message> |
+| ...   | ...      |
+
+Pas de push, pas de PR — c'est à ta main.
 ```
 
 ## Garde-fous
