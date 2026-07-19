@@ -1,6 +1,6 @@
 ---
 name: todo
-description: Suivi de la todo-list du projet (pages Accueil, Intervention, Anomalie, Historique). A utiliser en debut de session pour voir ou en est le projet, quand l'utilisateur demande "c'est quoi la suite", "on en est ou", "coche cette tache", ou a la fin d'une tache livree pour la marquer faite et proposer la suivante.
+description: Suivi de la todo-list du projet (pages Auth, Accueil, Intervention, Anomalie, Historique). A utiliser en debut de session pour voir ou en est le projet, quand l'utilisateur demande "c'est quoi la suite", "on en est ou", "coche cette tache", ou a la fin d'une tache livree pour la marquer faite et proposer la suivante.
 ---
 
 # Suivi du projet
@@ -10,7 +10,7 @@ fichier et est versionnee avec le code.
 
 ## Arguments
 
-`$ARGUMENTS` peut contenir le nom d'une page pour filtrer l'affichage : `accueil`,
+`$ARGUMENTS` peut contenir le nom d'une page pour filtrer l'affichage : `auth`, `accueil`,
 `intervention`, `anomalie` ou `historique` (insensible a la casse, accents optionnels).
 
 
@@ -18,7 +18,7 @@ fichier et est versionnee avec le code.
 - Si `$ARGUMENTS` correspond a une page : affiche uniquement l'etat de cette section
   (taches faites / en cours / restantes), sans resumer les autres pages.
 
-  `$ARGUMENTS` peut aussi contenir `all`, ca veut dire donne la checklist complete de todo, avec les titres de chaque tâche
+  `$ARGUMENTS` peut aussi contenir `list`, ca veut dire donne la checklist complete de todo, avec les titres de chaque tâche
 
 - Si `$ARGUMENTS` est vide : comportement par defaut ci-dessous (resume brievement de tout le projet).
 - Si `$ARGUMENTS` ne correspond a aucune page connue : le signaler a l'utilisateur et
@@ -41,6 +41,18 @@ fichier et est versionnee avec le code.
   explicitement fait et confirme dans la conversation.
 
 ## Etat du projet
+
+### Page Auth
+- [ ] Mettre le logo
+- [ ] Trouver un titre accrocheur
+- [ ] Valider la couleur background
+- [ ] Libeller bouton
+- [ ] Creation de l'API de connexion Node JS
+- [ ] Integrer le client de AUTH MICROSRVICE
+- [ ] Faire la connexion front back pour l'Authentification
+- [ ] Gestion du token, et refresh token
+- [ ] Gerer le rechargement de page
+- [ ] Et token enlever du cache
 
 ### Page Accueil
 - [ ] Mettre logo sur header
