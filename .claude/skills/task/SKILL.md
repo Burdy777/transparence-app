@@ -1,5 +1,5 @@
 ---
-name: todo
+name: task
 description: Suivi de la todo-list du projet (pages Auth, Accueil, Intervention, Anomalie, Historique). A utiliser en debut de session pour voir ou en est le projet, quand l'utilisateur demande "c'est quoi la suite", "on en est ou", "coche cette tache", ou a la fin d'une tache livree pour la marquer faite et proposer la suivante.
 ---
 
@@ -43,10 +43,10 @@ fichier et est versionnee avec le code.
 ## Etat du projet
 
 ### Page Auth
-- [ ] Mettre le logo
-- [ ] Trouver un titre accrocheur
-- [ ] Valider la couleur background
-- [ ] Libeller bouton
+- [x] Mettre le logo
+- [x] Trouver un titre accrocheur
+- [x] Valider la couleur background
+- [x] Libeller bouton
 - [ ] Creation de l'API de connexion Node JS
 - [ ] Integrer le client de AUTH MICROSRVICE
 - [ ] Faire la connexion front back pour l'Authentification
