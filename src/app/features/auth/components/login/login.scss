@@ -8,15 +8,10 @@
 // La coquille (.rp-page), les champs (.rp-field/.rp-val), le bouton (.rp-cta) et
 // les messages (.rp-form-error) viennent des classes globales (_app-shell.scss).
 
-// Couleurs prelevees sur le logo, utilisees par le fond et le CTA (maquette A).
-// Locales a la page : on ne touche pas aux tokens globaux --rp-* (palette bleue
-// de reference du reste de l'app).
-$leaf: #4a9d5f;
-$leaf-deep: #2f6e42; // vert profond du logo, pour le titre
-$leaf-deep-dark: #6ec684; // equivalent lisible sur fond sombre
-$drop-deep: #1c6f96;
-$paper: #f6f8f4; // papier legerement teinte vert (maquette)
-$paper-dark: #0f1712; // equivalent sombre de la maquette
+// Les couleurs de marque (vert feuille / bleu goutte / fond papier) prelevees sur
+// le logo sont desormais des tokens globaux (--rp-brand*, --rp-paper) dans
+// _app-shell.scss, pour servir toute l'app. Cette page les consomme comme les
+// autres ; le rendu reste identique aux valeurs d'origine.
 
 .login-page {
   // Contenu ancre vers le haut (logo remonte) plutot que centre verticalement.
@@ -24,11 +19,7 @@ $paper-dark: #0f1712; // equivalent sombre de la maquette
   justify-content: flex-start;
   padding: clamp(48px, 12vh, 96px) 22px calc(24px + env(safe-area-inset-bottom));
   // Fond papier teinte vert de la maquette, a la place du --rp-bg bleute.
-  background: $paper;
-
-  @media (prefers-color-scheme: dark) {
-    background: $paper-dark;
-  }
+  background: var(--rp-paper);
 }
 
 .login-form {
@@ -57,13 +48,13 @@ $paper-dark: #0f1712; // equivalent sombre de la maquette
   // Grand titre serif : contraste editorial avec le reste de l'app en sans-serif.
   h1 {
     margin: 0;
-    font-family: 'Iowan Old Style', 'Palatino Linotype', 'Georgia', serif;
+    font-family: var(--rp-serif);
     font-size: 27px;
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.15;
     text-wrap: balance;
-    color: $leaf-deep;
+    color: var(--rp-brand-deep);
   }
 
   .subtitle {
@@ -72,49 +63,17 @@ $paper-dark: #0f1712; // equivalent sombre de la maquette
     color: var(--rp-muted);
     font-weight: 500;
   }
-
-  @media (prefers-color-scheme: dark) {
-    h1 {
-      color: $leaf-deep-dark;
-    }
-  }
 }
 
-// ---- Champs facon maquette ----
-// La maquette de connexion utilise un label STATIQUE au-dessus du champ (petites
-// capitales espacees), au lieu du label flottant sur la bordure du style global
-// (.rp-field de _app-shell.scss). On surcharge donc localement.
-.login-form .rp-field {
-  gap: 6px;
-
-  label {
-    position: static;
-    top: auto;
-    left: auto;
-    padding: 0;
-    background: none;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--rp-muted);
-  }
-}
-
-// Erreur de validation d'un champ (sous le champ, avant le suivant).
-// Marge negative pour coller au champ au-dessus sans doubler le gap du form.
-.field-error {
-  color: var(--rp-danger);
-  font-size: 12px;
-  font-weight: 500;
-  margin: -14px 0 0 2px;
-}
+// Les champs (label statique + message d'erreur) sont desormais rendus par le
+// composant partage app-input-text-form-field (labelStyle="static"). La surcharge
+// du label et la regle .field-error ont ete deplacees dans ce composant.
 
 // Le CTA de connexion n'est pas colle en bas : espace au-dessus.
 // Degrade vert feuille -> bleu profond de la maquette, a la place du degrade
 // bleu global ; l'ombre reprend le vert pour rester coherente.
 .rp-cta {
   margin-top: 4px;
-  background: linear-gradient(135deg, $leaf, $drop-deep);
-  box-shadow: 0 12px 24px -12px color-mix(in srgb, #{$leaf} 80%, transparent);
+  background: linear-gradient(135deg, var(--rp-brand), var(--rp-brand-drop));
+  box-shadow: 0 12px 24px -12px color-mix(in srgb, var(--rp-brand) 80%, transparent);
 }

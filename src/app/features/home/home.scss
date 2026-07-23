@@ -69,26 +69,36 @@
 .action-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
+  gap: 15px;
+  padding: 18px;
   border-radius: 16px;
-  border: 1.5px solid var(--rp-line);
+  border: 1px solid var(--rp-line);
   background: var(--rp-surface);
   color: var(--rp-ink);
   text-decoration: none;
+  // Ombre douce de marque : donne de la profondeur aux cartes, coherente avec
+  // l'ombre teintee du CTA de connexion.
+  box-shadow: var(--rp-shadow);
   transition:
-    transform 0.08s ease,
-    border-color 0.12s ease;
+    transform 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+
+  // Elevation legere au survol (desktop) et retour tactile a l'appui (mobile).
+  &:hover {
+    border-color: var(--rp-brand);
+    box-shadow: 0 16px 30px -16px color-mix(in srgb, var(--rp-brand) 55%, transparent);
+  }
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.985);
     border-color: var(--rp-line-strong);
   }
 
   .ac-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 13px;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
     display: grid;
     place-items: center;
     flex: none;
@@ -104,12 +114,15 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 
+    // Titre serif : rappel de l'identite de marque (titre de la page de connexion).
     .ac-title {
-      font-size: 15.5px;
+      font-family: var(--rp-serif);
+      font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.01em;
+      color: var(--rp-brand-deep);
     }
 
     .ac-sub {
@@ -127,12 +140,14 @@
   }
 }
 
-// Teintes d'icone par action. Intervention = bleu marque ; anomalie = orange
-// (accent "avant" du projet, connote l'alerte) ; historique = bleu clair.
+// Teintes d'icone par action. Intervention = vert marque (action principale du
+// parcours) ; anomalie = orange (accent "avant" du projet, connote l'alerte) ;
+// historique = bleu clair. Les accents secondaires restent distincts pour la
+// lisibilite fonctionnelle, mais tous s'accordent au style de marque.
 .action-card.intervention .ac-icon {
-  background: var(--rp-primary-soft);
+  background: var(--rp-brand-soft);
   svg {
-    stroke: var(--rp-primary);
+    stroke: var(--rp-brand);
   }
 }
 

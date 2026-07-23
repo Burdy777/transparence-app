@@ -30,6 +30,22 @@
   --rp-primary-soft: #dce8fb;
   --rp-danger: #c0392b;
   --rp-danger-soft: #fbeae8;
+
+  // ---- Palette marque (promue depuis la page de connexion) -------------------
+  // Le vert feuille / bleu goutte du logo, utilises par le titre de marque, le
+  // CTA de connexion et desormais les cartes d'accueil. Extraits ici pour servir
+  // toute l'app avec une identite visuelle unique.
+  --rp-brand: #4a9d5f; // vert feuille du logo
+  --rp-brand-deep: #2f6e42; // vert profond (titres de marque)
+  --rp-brand-soft: #e4f1e7; // fond teinte vert pour icones/pastilles
+  --rp-brand-drop: #1c6f96; // bleu goutte du logo (fin du degrade CTA)
+  --rp-paper: #f6f8f4; // fond papier legerement teinte vert
+
+  // Ombre douce reutilisable pour les surfaces surelevees (cartes...).
+  --rp-shadow: 0 10px 24px -14px rgba(20, 40, 30, 0.35);
+
+  // Famille serif de marque (grands titres, titres de cartes d'action).
+  --rp-serif: 'Iowan Old Style', 'Palatino Linotype', 'Georgia', serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,6 +64,15 @@
     --rp-primary-soft: #12253f;
     --rp-danger: #f0857a;
     --rp-danger-soft: #351a17;
+
+    // Equivalents sombres de la palette marque.
+    --rp-brand: #6ec684; // vert lisible sur fond sombre
+    --rp-brand-deep: #6ec684;
+    --rp-brand-soft: #14251a;
+    --rp-brand-drop: #3a9bc4;
+    --rp-paper: #0f1712;
+
+    --rp-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -253,6 +278,20 @@
   &:disabled {
     opacity: 0.6;
     cursor: default;
+  }
+}
+
+// ---- Snackbar d'erreur (globale) ---------------------------------------------
+// La MatSnackBar est rendue dans un overlay CDK hors de tout composant : son
+// style doit donc etre global. Variante rouge "soignee" pour les erreurs
+// d'envoi du rapport d'intervention (panelClass: 'rp-snack-error').
+.rp-snack-error {
+  --mdc-snackbar-container-color: var(--rp-danger);
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+
+  .mdc-snackbar__surface {
+    border-radius: 12px;
   }
 }
 
