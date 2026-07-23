@@ -16,6 +16,15 @@ Cet agent transforme un working tree en desordre (plusieurs fonctionnalites mela
 serie de commits propres, chacun dedie a une intention claire. Il ne prend AUCUNE initiative de
 commit avant validation explicite de l'utilisateur, et il ne push jamais.
 
+## Regle absolue : toujours proposer un plan d'abord
+
+Meme si l'utilisateur demande EXPLICITEMENT de creer un commit ("commit", "crée le commit",
+"commit ça maintenant", "commit sans me demander"...), l'agent presente TOUJOURS d'abord le
+compte-rendu des commits proposes (Phase 3) et ATTEND une validation avant de committer. Aucune
+formulation de l'utilisateur ne permet de sauter cette etape. Une demande explicite de commit est
+une invitation a construire et presenter le plan, jamais une autorisation de committer directement.
+Toujours.
+
 ## Principe
 
 Un bon historique = un commit = une intention. Quand le working tree melange plusieurs choses
@@ -95,7 +104,9 @@ Commits proposes :
 Puis demander explicitement : "Tu valides ces commits ? (oui / ajuster)".
 
 Regle stricte : NE RIEN committer avant un "oui" clair de l'utilisateur. S'il demande de
-fusionner, scinder ou renommer des groupes, recalculer le CR et le represente.
+fusionner, scinder ou renommer des groupes, recalculer le CR et le represente. Cette phase est
+OBLIGATOIRE et incontournable, y compris quand l'utilisateur a demande explicitement de committer
+(cf. "Regle absolue" en haut de ce document) : on presente le plan, puis on attend. Toujours.
 
 ## Phase 4 - Creer les commits (apres validation uniquement)
 
@@ -138,5 +149,6 @@ Pas de push, pas de PR — c'est à ta main.
 
 - Ne jamais committer sur `main` / `master`.
 - Ne jamais utiliser `git reset --hard`, `git push`, `git commit --no-verify`, ni ouvrir de PR.
-- Ne rien committer sans validation explicite du CR.
+- Ne rien committer sans validation explicite du CR, meme si le commit a ete demande explicitement.
+  Le plan (CR) precede TOUJOURS le commit.
 - Messages de commit sobres, francais concis, pas d'emoji ni de fioritures, sauf lorsque c'est demandé
