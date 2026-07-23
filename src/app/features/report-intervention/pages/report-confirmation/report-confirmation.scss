@@ -1,0 +1,64 @@
+// Page de confirmation : carte centree verticalement, dans la coquille mobile
+// globale (.rp-page). Reutilise les tokens de marque --rp-brand-* et le CTA
+// global .rp-cta pour rester coherent avec l'accueil et la page de connexion.
+.confirm-page {
+  justify-content: center;
+  align-items: center;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+.confirm-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--rp-surface);
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+  box-shadow: var(--rp-shadow);
+  padding: 32px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+// Pastille verte de marque autour de l'icone de succes.
+.confirm-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--rp-brand-soft);
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+
+  mat-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 46px;
+    color: var(--rp-brand);
+  }
+}
+
+.confirm-title {
+  font-family: var(--rp-serif);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--rp-brand-deep);
+  margin: 0;
+}
+
+.confirm-text {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--rp-muted);
+  margin: 0 0 8px;
+}
+
+// Le CTA global est un bouton pleine largeur ; ici on le laisse s'etendre dans
+// la carte. text-decoration:none car c'est un lien route (<a>).
+.confirm-card .rp-cta {
+  text-decoration: none;
+  margin-top: 4px;
+}

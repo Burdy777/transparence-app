@@ -28,6 +28,56 @@
   min-height: 0;
 }
 
+// ---- Champs Angular Material harmonises avec le theme --rp-* -----------------
+// mat-form-field outline sur les listes site/adresse, la date et les notes. On
+// mappe les variables systeme Material sur nos tokens pour un rendu identique au
+// reste de l'app (couleurs, focus, bordures) sans creer un theme isole.
+.rp-mat-field {
+  width: 100%;
+
+  // Couleur d'accent (focus, label actif, bordure focus) = primaire du projet.
+  --mat-sys-primary: var(--rp-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--rp-primary-light);
+  --mdc-outlined-text-field-outline-color: var(--rp-line-strong);
+  --mdc-outlined-text-field-hover-outline-color: var(--rp-line-strong);
+  --mdc-outlined-text-field-label-text-color: var(--rp-muted);
+  --mdc-outlined-text-field-input-text-color: var(--rp-ink);
+  --mat-sys-error: var(--rp-danger);
+}
+
+// ---- Etats de chargement des interventions -----------------------------------
+// Chargement / erreur / vide. Cartes discretes posees dans le flux du contenu.
+.rp-state {
+  border: 1.5px solid var(--rp-line);
+  border-radius: 16px;
+  padding: 18px 16px;
+  background: var(--rp-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--rp-muted);
+    font-weight: 500;
+  }
+
+  mat-progress-bar {
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  &.rp-state--error {
+    border-color: color-mix(in srgb, var(--rp-danger) 34%, var(--rp-line));
+
+    p {
+      color: var(--rp-danger);
+    }
+  }
+}
+
 // Badge "Brouillon" dans l'app-bar.
 .draft {
   font-size: 11px;
@@ -204,5 +254,23 @@
   span {
     font-size: 10.5px;
     font-weight: 600;
+  }
+}
+
+// ---- Spinner du CTA pendant l'envoi ------------------------------------------
+// Petit cercle tournant affiche a la place de l'icone pendant la soumission
+// (empeche visuellement une double soumission, complement du [disabled] loading).
+.rp-cta-spinner {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  animation: rp-spin 0.7s linear infinite;
+}
+
+@keyframes rp-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

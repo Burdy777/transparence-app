@@ -23,50 +23,92 @@
     <div class="rp-content">
       <p class="rp-section-label"><span class="rp-dot"></span>Chantier</p>
 
-      <div class="rp-field">
-        <label for="siteName">Nom du chantier</label>
-        <input
-          id="siteName"
-          class="rp-val"
-          type="text"
-          formControlName="siteName"
-          placeholder="Ex: Residence Les Tilleuls"
-        />
-      </div>
+      <!-- Etats de chargement des interventions : chargement / erreur / vide /
+           succes (formulaire). Un seul est visible a la fois. -->
+      @if (store.loading()) {
+        <div class="rp-state rp-state--loading">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <p>Chargement des interventions...</p>
+        </div>
+      } @else if (store.loadError()) {
+        <div class="rp-state rp-state--error">
+          <p>Impossible de charger vos interventions.</p>
+          <button type="button" class="rp-btn-secondary" (click)="store.load()">Reessayer</button>
+        </div>
+      } @else if (store.isEmpty()) {
+        <div class="rp-state rp-state--empty">
+          <p>Aucune intervention ne vous est affectee pour le moment.</p>
+        </div>
+      } @else {
+        <!-- Liste "Nom du site" : la valeur portee est l'id d'intervention. -->
+        <mat-form-field appearance="outline" class="rp-mat-field">
+          <mat-label>Nom du site</mat-label>
+          <mat-select
+            formControlName="siteName"
+            (selectionChange)="onInterventionChange($event.value)"
+            panelClass="rp-select-panel"
+          >
+            @for (itv of store.interventions(); track itv.id) {
+              <mat-option [value]="itv.id">{{ itv.siteName }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.siteName.touched && form.controls.siteName.hasError('required')) {
+            <mat-error>Selectionnez un site.</mat-error>
+          }
+          @if (serverError(form.controls.siteName); as msg) {
+            <mat-error>{{ msg }}</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="rp-field">
-        <label for="address">Adresse</label>
-        <input
-          id="address"
-          class="rp-val"
-          type="text"
-          formControlName="address"
-          placeholder="Ex: 12 rue des Lilas, Paris"
-        />
-      </div>
+        <!-- Liste "Adresse" : alimentee par le MEME tableau, meme valeur (id).
+             Choisir ici selectionne aussi le site correspondant. -->
+        <mat-form-field appearance="outline" class="rp-mat-field">
+          <mat-label>Adresse</mat-label>
+          <mat-select
+            formControlName="address"
+            (selectionChange)="onInterventionChange($event.value)"
+            panelClass="rp-select-panel"
+          >
+            @for (itv of store.interventions(); track itv.id) {
+              <mat-option [value]="itv.id">{{ itv.address }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.address.touched && form.controls.address.hasError('required')) {
+            <mat-error>Selectionnez une adresse.</mat-error>
+          }
+          @if (serverError(form.controls.address); as msg) {
+            <mat-error>{{ msg }}</mat-error>
+          }
+        </mat-form-field>
+      }
 
-      <div class="rp-field">
-        <label for="interventionDate">Date d'intervention</label>
-        <input id="interventionDate" class="rp-val" type="date" formControlName="interventionDate" />
-      </div>
+      <mat-form-field appearance="outline" class="rp-mat-field">
+        <mat-label>Date d'intervention</mat-label>
+        <input matInput type="date" formControlName="interventionDate" />
+        @if (form.controls.interventionDate.touched && form.controls.interventionDate.hasError('required')) {
+          <mat-error>La date est requise.</mat-error>
+        }
+      </mat-form-field>
 
-      <div class="rp-field">
-        <label for="notes">Notes (optionnel)</label>
+      <mat-form-field appearance="outline" class="rp-mat-field">
+        <mat-label>Notes (optionnel)</mat-label>
         <textarea
-          id="notes"
-          class="rp-val"
+          matInput
           formControlName="notes"
           rows="3"
           placeholder="Remarques, produits utilises..."
         ></textarea>
-      </div>
+        @if (serverError(form.controls.notes); as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
 
       <p class="rp-section-label"><span class="rp-dot before"></span>Preuves photo</p>
 
       <fieldset class="photo-block before">
         <div class="photo-head">
           <span class="tag">Avant</span>
-          <span class="count">{{ beforePhotos().length }} photo(s)</span>
+          <span class="count">{{ beforePhotos().length }}/{{ maxPhotos }}</span>
         </div>
         <div class="grid">
           @for (photo of beforePhotos(); track photo.url; let i = $index) {
@@ -77,26 +119,28 @@
               </button>
             </div>
           }
-          <label class="add">
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              multiple
-              (change)="onFilesSelected($event, 'before')"
-            />
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            <span>Ajouter</span>
-          </label>
+          @if (beforePhotos().length < maxPhotos) {
+            <label class="add">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                multiple
+                (change)="onFilesSelected($event, 'before')"
+              />
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              <span>Ajouter</span>
+            </label>
+          }
         </div>
       </fieldset>
 
       <fieldset class="photo-block after">
         <div class="photo-head">
           <span class="tag">Apres</span>
-          <span class="count">{{ afterPhotos().length }} photo(s)</span>
+          <span class="count">{{ afterPhotos().length }}/{{ maxPhotos }}</span>
         </div>
         <div class="grid">
           @for (photo of afterPhotos(); track photo.url; let i = $index) {
@@ -107,39 +151,43 @@
               </button>
             </div>
           }
-          <label class="add">
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              multiple
-              (change)="onFilesSelected($event, 'after')"
-            />
-               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            <span>Ajouter</span>
-          </label>
+          @if (afterPhotos().length < maxPhotos) {
+            <label class="add">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                multiple
+                (change)="onFilesSelected($event, 'after')"
+              />
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              <span>Ajouter</span>
+            </label>
+          }
         </div>
       </fieldset>
 
-      @if (errorMessage()) {
-        <p class="rp-form-error">{{ errorMessage() }}</p>
-      }
-
-      @if (result()) {
-        <p class="rp-form-success">Rapport envoye avec succes.</p>
+      @if (photoError(); as msg) {
+        <p class="rp-form-error rp-photo-error">{{ msg }}</p>
       }
     </div>
 
     <div class="rp-cta-wrap">
+      <!-- Bouton toujours cliquable meme si le formulaire est invalide (exigence).
+           Il n'est desactive QUE pendant l'envoi, pour empecher une double
+           soumission. La validation est faite dans submit(). -->
       <button type="submit" class="rp-cta" [disabled]="loading()">
-        @if (!loading()) {
+        @if (loading()) {
+          <span class="rp-cta-spinner" aria-hidden="true"></span>
+          Envoi en cours...
+        } @else {
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
           </svg>
+          Envoyer le rapport
         }
-        {{ loading() ? 'Envoi en cours...' : 'Envoyer le rapport' }}
       </button>
     </div>
   </form>
