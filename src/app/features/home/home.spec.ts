@@ -1,26 +1,30 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Home } from './home';
-import { Auth } from '../../core/services/auth';
+import { AuthStore } from '../../core/state/auth.store';
 import { signal } from '@angular/core';
 
 describe('Home', () => {
-  function setup(agentName: string | null) {
-    const authStub = {
-      currentAgent: signal(agentName ? { id: '1', email: 'a@b.c', name: agentName } : null),
-      logout: () => undefined,
+  function setup(firstName: string | null) {
+    const authStoreStub = {
+      user: signal(
+        firstName
+          ? { id: '1', email: 'a@b.c', firstName, lastName: 'Dupont', roles: ['USER'] }
+          : null,
+      ),
+      logout: () => ({ subscribe: (cb: () => void) => cb() }),
     };
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: Auth, useValue: authStub }],
+      providers: [provideRouter([]), { provide: AuthStore, useValue: authStoreStub }],
     });
     return TestBed.createComponent(Home).componentInstance;
   }
 
-  it('expose le nom de l agent connecte', () => {
-    expect(setup('Jean Dupont').agentName()).toBe('Jean Dupont');
+  it('expose le prenom de l utilisateur connecte', () => {
+    expect(setup('Jean').agentName()).toBe('Jean');
   });
 
-  it('retombe sur un libelle neutre sans agent', () => {
+  it('retombe sur un libelle neutre sans utilisateur', () => {
     expect(setup(null).agentName()).toBe('Agent');
   });
 });

@@ -1,20 +1,11 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
-import { Auth } from './core/services/auth';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './app.scss',
 })
-export class App {
-  protected auth = inject(Auth);
-  private router = inject(Router);
-
-  logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
-}
+export class App {}

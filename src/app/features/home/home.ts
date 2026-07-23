@@ -1,6 +1,6 @@
 import { Component, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Auth } from '../../core/services/auth';
+import { AuthStore } from '../../core/state/auth.store';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +10,11 @@ import { Auth } from '../../core/services/auth';
   styleUrl: './home.scss',
 })
 export class Home {
-  private auth = inject(Auth);
+  private authStore = inject(AuthStore);
   private router = inject(Router);
 
-  // Prenom de l'agent pour l'accueil, ou libelle neutre si non disponible.
-  readonly agentName = computed(() => this.auth.currentAgent()?.name ?? 'Agent');
+  // Prenom de l'utilisateur pour l'accueil, ou libelle neutre si indisponible.
+  readonly agentName = computed(() => this.authStore.user()?.firstName ?? 'Agent');
 
   logout(): void {
     // Confirmation avant deconnexion (exigence du parcours). window.confirm
@@ -24,9 +24,12 @@ export class Home {
     if (!confirmed) {
       return;
     }
-    this.auth.logout();
-    // replaceUrl : apres deconnexion, le login remplace l'accueil dans
-    // l'historique (le bouton Retour ne doit pas revenir sur une page protegee).
-    this.router.navigate(['/login'], { replaceUrl: true });
+    // Le store nettoie la session (appel /auth/logout best-effort + purge
+    // memoire/stockage). La redirection suit la fin du flux.
+    this.authStore.logout().subscribe(() => {
+      // replaceUrl : apres deconnexion, le login remplace l'accueil dans
+      // l'historique (le bouton Retour ne doit pas revenir sur une page protegee).
+      void this.router.navigate(['/login'], { replaceUrl: true });
+    });
   }
 }
