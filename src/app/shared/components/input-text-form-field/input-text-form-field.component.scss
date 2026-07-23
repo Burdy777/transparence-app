@@ -1,0 +1,33 @@
+// Composant mince : structure et label flottant viennent des classes globales
+// (_app-shell.scss). display:contents fait du .rp-field et du .field-error des
+// enfants directs du flux parent (le flex du form) : la marge negative de
+// l'erreur compte donc sur le gap du parent, comme le markup d'origine.
+:host {
+  display: contents;
+}
+
+.field-error {
+  color: var(--rp-danger);
+  font-size: 12px;
+  font-weight: 500;
+  margin: -14px 0 0 2px;
+}
+
+// Variante labelStyle="static" : label statique en petites capitales au-dessus
+// du champ (style connexion), au lieu du label flottant global.
+.rp-field.label-static {
+  gap: 6px;
+
+  label {
+    position: static;
+    top: auto;
+    left: auto;
+    padding: 0;
+    background: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rp-muted);
+  }
+}

@@ -8,34 +8,26 @@
       <p class="subtitle">Connectez-vous pour continuer</p>
     </div>
 
-    <div class="rp-field">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        class="rp-val"
-        type="email"
-        formControlName="email"
-        autocomplete="username"
-        placeholder="agent@exemple.com"
-      />
-    </div>
-    @if (form.controls.email.touched && form.controls.email.invalid) {
-      <p class="field-error">Email valide requis</p>
-    }
+    <app-input-text-form-field
+      fieldId="email"
+      label="Email"
+      type="email"
+      labelStyle="static"
+      [control]="form.controls.email"
+      autocomplete="username"
+      placeholder="agent@exemple.com"
+      errorMessage="Email valide requis"
+    />
 
-    <div class="rp-field">
-      <label for="password">Mot de passe</label>
-      <input
-        id="password"
-        class="rp-val"
-        type="password"
-        formControlName="password"
-        autocomplete="current-password"
-      />
-    </div>
-    @if (form.controls.password.touched && form.controls.password.invalid) {
-      <p class="field-error">Mot de passe requis</p>
-    }
+    <app-input-text-form-field
+      fieldId="password"
+      label="Mot de passe"
+      type="password"
+      labelStyle="static"
+      [control]="form.controls.password"
+      autocomplete="current-password"
+      errorMessage="Mot de passe requis"
+    />
 
     @if (errorMessage()) {
       <p class="rp-form-error">{{ errorMessage() }}</p>

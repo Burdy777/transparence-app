@@ -1,0 +1,25 @@
+<div class="rp-field" [class.label-static]="labelStyle() === 'static'">
+  <label [attr.for]="fieldId()">{{ label() }}</label>
+  @if (multiline()) {
+    <textarea
+      [id]="fieldId()"
+      class="rp-val"
+      [formControl]="control()"
+      [rows]="rows()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.placeholder]="placeholder()"
+    ></textarea>
+  } @else {
+    <input
+      [id]="fieldId()"
+      class="rp-val"
+      [type]="type()"
+      [formControl]="control()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.placeholder]="placeholder()"
+    />
+  }
+</div>
+@if (showError()) {
+  <p class="field-error">{{ errorMessage() }}</p>
+}
