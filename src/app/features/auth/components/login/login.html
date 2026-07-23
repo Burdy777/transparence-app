@@ -1,25 +1,39 @@
-<div class="login-page">
-  <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
-    <h1>Rapports de chantier</h1>
-    <p class="subtitle">Connexion agent</p>
+<div class="rp-page login-page">
+  <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="brand">
+      <div class="logo">
+        <img src="logo-transparence.png" alt="Transparence" />
+      </div>
+      <h1>Espace agent</h1>
+      <p class="subtitle">Connectez-vous pour continuer</p>
+    </div>
 
-    <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" autocomplete="username" placeholder="agent@exemple.com" />
-    @if (form.controls.email.touched && form.controls.email.invalid) {
-      <p class="field-error">Email valide requis</p>
-    }
+    <app-input-text-form-field
+      fieldId="email"
+      label="Email"
+      type="email"
+      labelStyle="static"
+      [control]="form.controls.email"
+      autocomplete="username"
+      placeholder="agent@exemple.com"
+      errorMessage="Email valide requis"
+    />
 
-    <label for="password">Mot de passe</label>
-    <input id="password" type="password" formControlName="password" autocomplete="current-password" />
-    @if (form.controls.password.touched && form.controls.password.invalid) {
-      <p class="field-error">Mot de passe requis</p>
-    }
+    <app-input-text-form-field
+      fieldId="password"
+      label="Mot de passe"
+      type="password"
+      labelStyle="static"
+      [control]="form.controls.password"
+      autocomplete="current-password"
+      errorMessage="Mot de passe requis"
+    />
 
     @if (errorMessage()) {
-      <p class="form-error">{{ errorMessage() }}</p>
+      <p class="rp-form-error">{{ errorMessage() }}</p>
     }
 
-    <button type="submit" [disabled]="loading()">
+    <button type="submit" class="rp-cta" [disabled]="loading()">
       {{ loading() ? 'Connexion...' : 'Se connecter' }}
     </button>
   </form>

@@ -10,7 +10,7 @@ UI text is French (unaccented, e.g. `apres`, `rapport envoye`). Keep new user-fa
 ## Stack
 - Angular 22 with standalone components and zoneless change detection
 - NgRx SignalStore (@ngrx/signals) for all shared/feature state
-- Bootstrap 5.3 via SCSS - NO Angular Material, NO Tailwind
+- Angular Material, NO Tailwind OR Bootstrap
 - RxJS for async operations; convert to signals at component boundary with toSignal()
 - Angular Eslint for lint
 - TypeScript strict mode enforced
@@ -29,7 +29,7 @@ See @package.json for all available npm commands.
 - ALWAYS use standalone components (`standalone: true` in @Component)
 - ALWAYS use `inject()` function - never constructor injection
 - ALWAYS use `input()` signal API for @Input, `output()` for @Output
-- Use `OnPush` change detection strategy on all components
+- Use `OnPush` change detection strategy on all components, is by default, no mentionned it, because in Angular 22 its implicit
 - Use `@defer` blocks for non-critical UI sections
 - Prefer `httpResource()` for simple GET requests; use HttpClient for mutations
 ## State Management Rules

@@ -1,14 +1,3 @@
-@if (auth.currentAgent(); as agent) {
-  <header class="app-header">
-    <span class="app-title">Rapports de chantier</span>
-    <nav>
-      <a routerLink="/nouveau-rapport" routerLinkActive="active">Nouveau</a>
-      <a routerLink="/historique" routerLinkActive="active">Historique</a>
-    </nav>
-    <button class="logout-btn" type="button" (click)="logout()">{{ agent.name }} · Deconnexion</button>
-  </header>
-}
-
 <main>
   <router-outlet />
 </main>

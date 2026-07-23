@@ -8,4 +8,10 @@ export const reportInterventionRoutes: Routes = [
     loadComponent: () =>
       import('./components/report-form/report-form').then((m) => m.ReportForm),
   },
+  {
+    path: 'rapport-confirme',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/report-confirmation/report-confirmation').then((m) => m.ReportConfirmation),
+  },
 ];

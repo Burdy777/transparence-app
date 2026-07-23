@@ -1,129 +1,276 @@
-.report-page {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: var(--spacing);
+// Styles SPECIFIQUES a la page Intervention.
+//
+// La coquille de page, l'app-bar + bouton retour, les champs, le CTA et les
+// messages viennent des classes globales rp-* (voir src/styles/_app-shell.scss).
+// Ne restent ici que les elements propres a cet ecran : accents avant/apres,
+// blocs photo, barre de progression Material, badge "Brouillon".
+.rp-page {
+  // Accents specifiques a l'intervention (preuves photo avant / apres).
+  --rp-before: #c98a3c;
+  --rp-before-soft: #f6ecdb;
+  --rp-after: #1499c9;
+  --rp-after-soft: #d7effa;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rp-page {
+    --rp-before: #d59b52;
+    --rp-before-soft: #2c2417;
+    --rp-after: #38b6e0;
+    --rp-after-soft: #102a3a;
+  }
 }
 
 .report-form {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
 
-  h1 {
-    font-size: 1.2rem;
-    margin: 0 0 20px;
+// ---- Champs Angular Material harmonises avec le theme --rp-* -----------------
+// mat-form-field outline sur les listes site/adresse, la date et les notes. On
+// mappe les variables systeme Material sur nos tokens pour un rendu identique au
+// reste de l'app (couleurs, focus, bordures) sans creer un theme isole.
+.rp-mat-field {
+  width: 100%;
+
+  // Couleur d'accent (focus, label actif, bordure focus) = primaire du projet.
+  --mat-sys-primary: var(--rp-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--rp-primary-light);
+  --mdc-outlined-text-field-outline-color: var(--rp-line-strong);
+  --mdc-outlined-text-field-hover-outline-color: var(--rp-line-strong);
+  --mdc-outlined-text-field-label-text-color: var(--rp-muted);
+  --mdc-outlined-text-field-input-text-color: var(--rp-ink);
+  --mat-sys-error: var(--rp-danger);
+}
+
+// ---- Etats de chargement des interventions -----------------------------------
+// Chargement / erreur / vide. Cartes discretes posees dans le flux du contenu.
+.rp-state {
+  border: 1.5px solid var(--rp-line);
+  border-radius: 16px;
+  padding: 18px 16px;
+  background: var(--rp-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--rp-muted);
+    font-weight: 500;
   }
 
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 14px 0 6px;
-  }
-
-  input[type='text'],
-  input[type='date'],
-  textarea {
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    resize: vertical;
-  }
-
-  fieldset.photo-section {
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    margin-top: 18px;
-    padding: 12px;
-
-    legend {
-      font-weight: 600;
-      font-size: 0.9rem;
-      padding: 0 6px;
-    }
-  }
-
-  .photo-picker {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 14px;
-    border: 1px dashed var(--color-primary);
-    border-radius: 8px;
-    color: var(--color-primary-dark);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-
-    input[type='file'] {
-      display: none;
-    }
-  }
-
-  .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .photo-thumb {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 8px;
+  mat-progress-bar {
+    border-radius: 999px;
     overflow: hidden;
-    background: var(--color-border);
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+  &.rp-state--error {
+    border-color: color-mix(in srgb, var(--rp-danger) 34%, var(--rp-line));
 
-    .remove-btn {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 22px;
-      height: 22px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      font-size: 1rem;
-      line-height: 1;
-      cursor: pointer;
+    p {
+      color: var(--rp-danger);
     }
   }
+}
 
-  .form-error {
-    color: var(--color-danger);
-    background: #fbeae8;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 16px;
-    font-size: 0.9rem;
+// Badge "Brouillon" dans l'app-bar.
+.draft {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rp-primary);
+  background: var(--rp-primary-soft);
+  padding: 6px 10px;
+  border-radius: 999px;
+  flex: none;
+}
+
+// Point de section colore pour la partie "Preuves photo" (accent avant).
+.rp-section-label .rp-dot.before {
+  background: var(--rp-before);
+}
+
+// ---- Barre de progression (Angular Material, rendue iso maquette) ----
+// NB: ne pas nommer ce wrapper ".progress" : Bootstrap (importe globalement)
+// definit cette classe avec flex + overflow hidden, ce qui masque le texte
+// et remplace la barre Material par son propre fond gris.
+.rp-progress-wrap {
+  padding: 12px 20px 6px;
+
+  .rp-progress {
+    height: 5px;
+    border-radius: 999px;
+    overflow: hidden;
+    // Piste (fond) et hauteurs de la barre : identiques a la maquette.
+    --mdc-linear-progress-track-color: var(--rp-line);
+    --mat-progress-bar-track-color: var(--rp-line);
+    --mdc-linear-progress-track-height: 5px;
+    --mdc-linear-progress-active-indicator-height: 5px;
   }
 
-  .form-success {
-    color: var(--color-primary-dark);
-    background: #e3f3ed;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 16px;
-    font-size: 0.9rem;
+  // Remplissage : degrade bleu de la maquette. On atteint le DOM interne de
+  // Material via ::ng-deep, scope au wrapper pour ne rien faire fuir ailleurs.
+  ::ng-deep .rp-progress {
+    .mdc-linear-progress__bar-inner {
+      border-top-width: 5px;
+      border-color: transparent;
+      background: linear-gradient(90deg, var(--rp-primary), var(--rp-after));
+      // Indispensable : la hauteur de cet element vient uniquement de son
+      // border-top (astuce MDC), donc sa padding-box fait 0px de haut. Sans
+      // origin border-box, le degrade a une taille nulle et ne se peint pas
+      // (une couleur unie, elle, remplirait quand meme la zone de clip).
+      background-origin: border-box;
+    }
+
+    .mdc-linear-progress__buffer-bar {
+      background: var(--rp-line);
+    }
   }
 
-  .submit-btn {
-    margin-top: 22px;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--color-primary);
-    color: white;
-    font-size: 1rem;
+  .cap {
+    font-size: 11.5px;
+    color: var(--rp-muted);
+    margin: 6px 0 0;
+    font-weight: 500;
+  }
+}
+
+// ---- Blocs photo ----
+.photo-block {
+  border: 1.5px solid var(--rp-line);
+  border-radius: 16px;
+  padding: 14px;
+  margin: 0;
+  // Carte blanche posee sur le fond teinte de la page.
+  background: var(--rp-surface);
+
+  &.before {
+    border-color: color-mix(in srgb, var(--rp-before) 34%, var(--rp-line));
+  }
+
+  &.after {
+    border-color: color-mix(in srgb, var(--rp-after) 34%, var(--rp-line));
+  }
+}
+
+.photo-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+  }
+
+  .count {
+    font-size: 12px;
+    color: var(--rp-muted);
     font-weight: 600;
+    margin-left: auto;
+  }
+}
 
-    &:disabled {
-      opacity: 0.6;
-    }
+.before .photo-head .tag {
+  color: var(--rp-before);
+  background: var(--rp-before-soft);
+}
+
+.after .photo-head .tag {
+  color: var(--rp-after);
+  background: var(--rp-after-soft);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 11px;
+  overflow: hidden;
+  background: var(--rp-line);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rm {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(10, 16, 22, 0.62);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+}
+
+.add {
+  aspect-ratio: 1;
+  border-radius: 11px;
+  border: 1.6px dashed var(--rp-line-strong);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--rp-muted);
+  background: var(--rp-surface-2);
+  cursor: pointer;
+
+  input[type='file'] {
+    display: none;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--rp-primary);
+  }
+
+  span {
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+}
+
+// ---- Spinner du CTA pendant l'envoi ------------------------------------------
+// Petit cercle tournant affiche a la place de l'icone pendant la soumission
+// (empeche visuellement une double soumission, complement du [disabled] loading).
+.rp-cta-spinner {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  animation: rp-spin 0.7s linear infinite;
+}
+
+@keyframes rp-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

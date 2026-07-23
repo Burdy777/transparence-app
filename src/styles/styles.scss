@@ -1,7 +1,12 @@
+// Styles globaux reutilisables de l'app (coquille de page mobile, app-bar,
+// bouton retour, champs, boutons, messages). Bases sur la page Intervention,
+// reference visuelle du projet.
+@use 'app-shell';
+
 :root {
   --color-primary: #1a7a5e;
   --color-primary-dark: #125c46;
-  --color-bg: #f5f7f6;
+  --color-bg: #eef1f6;
   --color-surface: #ffffff;
   --color-text: #1f2723;
   --color-muted: #6b7873;

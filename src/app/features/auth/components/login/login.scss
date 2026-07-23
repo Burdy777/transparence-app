@@ -1,75 +1,79 @@
+// Styles SPECIFIQUES a la page de connexion (piste "sobre").
+//
+// Evolution directe de la structure d'origine : fond uni (--rp-bg herite de
+// .rp-page), contenu centre verticalement, bloc marque (logo + titre) puis
+// formulaire. Le changement par rapport a avant tient dans le logo et la typo,
+// pas dans la mise en page.
+//
+// La coquille (.rp-page), les champs (.rp-field/.rp-val), le bouton (.rp-cta) et
+// les messages (.rp-form-error) viennent des classes globales (_app-shell.scss).
+
+// Les couleurs de marque (vert feuille / bleu goutte / fond papier) prelevees sur
+// le logo sont desormais des tokens globaux (--rp-brand*, --rp-paper) dans
+// _app-shell.scss, pour servir toute l'app. Cette page les consomme comme les
+// autres ; le rendu reste identique aux valeurs d'origine.
+
 .login-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing);
+  // Contenu ancre vers le haut (logo remonte) plutot que centre verticalement.
+  // Grand espace au-dessus pour aerer, formulaire qui suit dessous.
+  justify-content: flex-start;
+  padding: clamp(48px, 12vh, 96px) 22px calc(24px + env(safe-area-inset-bottom));
+  // Fond papier teinte vert de la maquette, a la place du --rp-bg bleute.
+  background: var(--rp-paper);
 }
 
-.login-card {
-  width: 100%;
-  max-width: 360px;
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+.login-form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
 
+// ---- Marque (logo + titre) ----
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  // Espace genereux entre le bloc marque et le formulaire.
+  margin-bottom: 28px;
+
+  .logo img {
+    width: 210px;
+    height: auto;
+    display: block;
+    // Espace large entre le logo et le titre.
+    margin-bottom: 52px;
+  }
+
+  // Grand titre serif : contraste editorial avec le reste de l'app en sans-serif.
   h1 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
+    margin: 0;
+    font-family: var(--rp-serif);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    text-wrap: balance;
+    color: var(--rp-brand-deep);
   }
 
   .subtitle {
-    color: var(--color-muted);
-    margin: 0 0 20px;
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: var(--rp-muted);
+    font-weight: 500;
   }
+}
 
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    margin-top: 14px;
-  }
+// Les champs (label statique + message d'erreur) sont desormais rendus par le
+// composant partage app-input-text-form-field (labelStyle="static"). La surcharge
+// du label et la regle .field-error ont ete deplacees dans ce composant.
 
-  input {
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-  }
-
-  .field-error {
-    color: var(--color-danger);
-    font-size: 0.8rem;
-    margin: 4px 0 0;
-  }
-
-  .form-error {
-    color: var(--color-danger);
-    background: #fbeae8;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 16px;
-    font-size: 0.9rem;
-  }
-
-  button {
-    margin-top: 22px;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--color-primary);
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-
-    &:disabled {
-      opacity: 0.6;
-    }
-
-    &:not(:disabled):active {
-      background: var(--color-primary-dark);
-    }
-  }
+// Le CTA de connexion n'est pas colle en bas : espace au-dessus.
+// Degrade vert feuille -> bleu profond de la maquette, a la place du degrade
+// bleu global ; l'ombre reprend le vert pour rester coherente.
+.rp-cta {
+  margin-top: 4px;
+  background: linear-gradient(135deg, var(--rp-brand), var(--rp-brand-drop));
+  box-shadow: 0 12px 24px -12px color-mix(in srgb, var(--rp-brand) 80%, transparent);
 }

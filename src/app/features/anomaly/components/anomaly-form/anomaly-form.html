@@ -1,0 +1,112 @@
+<div class="rp-page">
+  <form class="anomaly-form" [formGroup]="form" (ngSubmit)="submit()">
+    <header class="rp-appbar">
+      <a class="rp-back" routerLink="/accueil" aria-label="Retour a l'accueil">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </a>
+      <div class="rp-titles">
+        <span class="rp-sub">Signalement</span>
+        <span class="rp-main">Nouvelle anomalie</span>
+      </div>
+    </header>
+
+    <div class="rp-progress-wrap">
+      <mat-progress-bar class="rp-progress" mode="determinate" [value]="progress()"></mat-progress-bar>
+      <p class="cap">{{ progressLabel() }}</p>
+    </div>
+
+    <div class="rp-content">
+      <p class="rp-section-label"><span class="rp-dot alert"></span>Localisation</p>
+
+      <div class="rp-field">
+        <label for="siteName">Nom du chantier</label>
+        <input
+          id="siteName"
+          class="rp-val"
+          type="text"
+          formControlName="siteName"
+          placeholder="Ex: Residence Les Tilleuls"
+        />
+      </div>
+
+      <div class="rp-field">
+        <label for="address">Adresse</label>
+        <input
+          id="address"
+          class="rp-val"
+          type="text"
+          formControlName="address"
+          placeholder="Ex: 12 rue des Lilas, Paris"
+        />
+      </div>
+
+      <p class="rp-section-label"><span class="rp-dot alert"></span>Gravite</p>
+
+      <div class="severity" role="radiogroup" aria-label="Gravite de l'anomalie">
+        @for (level of severities; track level.value) {
+          <label class="sev-option" [class.checked]="form.controls.severity.value === level.value">
+            <input type="radio" formControlName="severity" [value]="level.value" />
+            <span>{{ level.label }}</span>
+          </label>
+        }
+      </div>
+
+      <p class="rp-section-label"><span class="rp-dot alert"></span>Description</p>
+
+      <div class="rp-field">
+        <label for="comment">Commentaire</label>
+        <textarea
+          id="comment"
+          class="rp-val"
+          formControlName="comment"
+          rows="4"
+          placeholder="Decrivez l'anomalie constatee..."
+        ></textarea>
+      </div>
+
+      <fieldset class="photo-block">
+        <div class="photo-head">
+          <span class="tag">Photo</span>
+          <span class="count">{{ photos().length }} photo(s)</span>
+        </div>
+        <div class="grid">
+          @for (photo of photos(); track photo.url; let i = $index) {
+            <div class="thumb">
+              <img [src]="photo.url" alt="Photo de l'anomalie" />
+              <button type="button" class="rm" (click)="removePhoto(i)" aria-label="Retirer la photo">
+                &times;
+              </button>
+            </div>
+          }
+          <label class="add">
+            <input type="file" accept="image/*" capture="environment" multiple (change)="onFilesSelected($event)" />
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Ajouter</span>
+          </label>
+        </div>
+      </fieldset>
+
+      @if (errorMessage()) {
+        <p class="rp-form-error">{{ errorMessage() }}</p>
+      }
+
+      @if (submitted()) {
+        <p class="rp-form-success">Anomalie enregistree.</p>
+      }
+    </div>
+
+    <div class="rp-cta-wrap">
+      <button type="submit" class="rp-cta" [disabled]="loading()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+          <path d="M12 9v4M12 17h.01" />
+        </svg>
+        Enregistrer l'anomalie
+      </button>
+    </div>
+  </form>
+</div>

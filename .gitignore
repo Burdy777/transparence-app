@@ -44,3 +44,9 @@ Thumbs.db
 
 # Claude local overrides (personnel, non versionne)
 /CLAUDE.local.md
+
+# Sorties de tests visuels (Playwright MCP, captures, logs serveur)
+/.playwright-mcp/
+/*.png
+/server.log
+/server.err

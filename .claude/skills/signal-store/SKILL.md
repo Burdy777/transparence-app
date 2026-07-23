@@ -1,7 +1,11 @@
+---
+name: signal-store
+description: Patterns pour creer ou modifier des NgRx Signal Stores dans ce projet Angular. A utiliser quand l'utilisateur cree ou modifie un store (@ngrx/signals), demande les conventions de nommage des stores, ou le template standard d'un store de feature.
+---
+
 # NgRx Signal Store Patterns
 Use this skill when creating or modifying NgRx Signal Stores.
 ## Standard Store Template
-[
 import { computed, inject } from '@angular/core';
 import {
   patchState,
@@ -13,69 +17,93 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap, tap } from 'rxjs';
-import { UserApiService } from '../services/user-api.service';
-import { User } from '../models/user.model';
 
-// --- State Interface ---
+import { User } from '../models/user.model';
+import { UserApiService } from '../services/user-api.service';
+
 interface UsersState {
   users: User[];
   selectedUserId: string | null;
   loading: boolean;
   error: string | null;
 }
-// --- Initial State ---
+
 const initialState: UsersState = {
   users: [],
   selectedUserId: null,
   loading: false,
   error: null,
 };
-// --- Signal Store ---
+
 export const UsersStore = signalStore(
   { providedIn: 'root' },
+
   withState(initialState),
-  // Derived / computed signals
+
   withComputed(({ users, selectedUserId }) => ({
-    selectedUser: computed(() =>
-      users().find((u) => u.id === selectedUserId()) ?? null
-    ),
     totalUsers: computed(() => users().length),
-    activeUsers: computed(() => users().filter((u) => u.isActive)),
+
+    selectedUser: computed(
+      () => users().find((user) => user.id === selectedUserId()) ?? null
+    ),
   })),
-  // Methods - both sync and async
+
   withMethods((store, userApi = inject(UserApiService)) => ({
-    // Sync state update
     selectUser(userId: string): void {
       patchState(store, { selectedUserId: userId });
     },
+
     clearSelection(): void {
       patchState(store, { selectedUserId: null });
     },
-    // Async - RxJS-powered method
+
     loadUsers: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
+        tap(() => {
+          patchState(store, {
+            loading: true,
+            error: null,
+          });
+        }),
+
         switchMap(() =>
           userApi.getAll().pipe(
             tapResponse({
-              next: (users) => patchState(store, { users, loading: false }),
-              error: (err: Error) =>
-                patchState(store, { error: err.message, loading: false }),
+              next: (users) => {
+                patchState(store, {
+                  users,
+                  loading: false,
+                });
+              },
+
+              error: (error: Error) => {
+                patchState(store, {
+                  error: error.message,
+                  loading: false,
+                });
+              },
             })
           )
         )
       )
     ),
+
     deleteUser: rxMethod<string>(
       pipe(
         switchMap((userId) =>
           userApi.delete(userId).pipe(
             tapResponse({
-              next: () =>
+              next: () => {
                 patchState(store, (state) => ({
-                  users: state.users.filter((u) => u.id !== userId),
-                })),
-              error: (err: Error) => patchState(store, { error: err.message }),
+                  users: state.users.filter((user) => user.id !== userId),
+                }));
+              },
+
+              error: (error: Error) => {
+                patchState(store, {
+                  error: error.message,
+                });
+              },
             })
           )
         )
@@ -83,7 +111,7 @@ export const UsersStore = signalStore(
     ),
   }))
 );
-]
+
 ## Naming Conventions
 - Store file: `<feature>.store.ts`
 - Store class: `<Feature>Store`

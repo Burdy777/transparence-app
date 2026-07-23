@@ -1,0 +1,209 @@
+// Styles SPECIFIQUES a la page Anomalie.
+//
+// Reprend l'identite visuelle de la page Intervention a l'identique, y compris
+// sa palette d'accent (memes tokens --rp-before/--rp-after, memes valeurs).
+// Ici : selecteur de gravite et bloc photo unique.
+.rp-page {
+  // Accents identiques a la page Intervention (voir report-form.scss).
+  --rp-before: #c98a3c;
+  --rp-before-soft: #f6ecdb;
+  --rp-after: #1499c9;
+  --rp-after-soft: #d7effa;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rp-page {
+    --rp-before: #d59b52;
+    --rp-before-soft: #2c2417;
+    --rp-after: #38b6e0;
+    --rp-after-soft: #102a3a;
+  }
+}
+
+.anomaly-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+// Point de section teinte alerte (accent "avant" de l'Intervention).
+.rp-section-label .rp-dot.alert {
+  background: var(--rp-before);
+}
+
+// ---- Barre de progression (Angular Material, meme structure que report-form) ----
+.rp-progress-wrap {
+  padding: 12px 20px 6px;
+
+  .rp-progress {
+    height: 5px;
+    border-radius: 999px;
+    overflow: hidden;
+    --mdc-linear-progress-track-color: var(--rp-line);
+    --mat-progress-bar-track-color: var(--rp-line);
+    --mdc-linear-progress-track-height: 5px;
+    --mdc-linear-progress-active-indicator-height: 5px;
+  }
+
+  // Remplissage : meme degrade que la page Intervention (orange -> bleu-cyan).
+  // On atteint le DOM interne de Material via ::ng-deep, scope au wrapper pour
+  // ne rien faire fuir ailleurs.
+  ::ng-deep .rp-progress {
+    .mdc-linear-progress__bar-inner {
+      border-top-width: 5px;
+      border-color: transparent;
+      background: linear-gradient(90deg, var(--rp-before), var(--rp-after));
+      // Indispensable : la hauteur de cet element vient uniquement de son
+      // border-top (astuce MDC), donc sa padding-box fait 0px de haut. Sans
+      // origin border-box, le degrade a une taille nulle et ne se peint pas.
+      background-origin: border-box;
+    }
+
+    .mdc-linear-progress__buffer-bar {
+      background: var(--rp-line);
+    }
+  }
+
+  .cap {
+    font-size: 11.5px;
+    color: var(--rp-muted);
+    margin: 6px 0 0;
+    font-weight: 500;
+  }
+}
+
+// ---- Selecteur de gravite (radios stylises en segments) ----
+.severity {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+
+  .sev-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border-radius: 12px;
+    border: 1.5px solid var(--rp-line-strong);
+    background: var(--rp-surface);
+    color: var(--rp-muted);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &.checked {
+      border-color: var(--rp-before);
+      background: var(--rp-before-soft);
+      color: var(--rp-before);
+    }
+  }
+}
+
+// ---- Bloc photo (unique, meme accent que le bloc "avant" de l'Intervention) ----
+.photo-block {
+  border: 1.5px solid color-mix(in srgb, var(--rp-before) 34%, var(--rp-line));
+  border-radius: 16px;
+  padding: 14px;
+  margin: 0;
+  background: var(--rp-surface);
+}
+
+.photo-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    color: var(--rp-before);
+    background: var(--rp-before-soft);
+  }
+
+  .count {
+    font-size: 12px;
+    color: var(--rp-muted);
+    font-weight: 600;
+    margin-left: auto;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 11px;
+  overflow: hidden;
+  background: var(--rp-line);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rm {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(10, 16, 22, 0.62);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+}
+
+.add {
+  aspect-ratio: 1;
+  border-radius: 11px;
+  border: 1.6px dashed var(--rp-line-strong);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--rp-muted);
+  background: var(--rp-surface-2);
+  cursor: pointer;
+
+  input[type='file'] {
+    display: none;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--rp-before);
+  }
+
+  span {
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+}
