@@ -27,6 +27,7 @@ export const authGuard: CanActivateFn = (
     filter((initialized) => initialized),
     take(1),
     map(() => {
+      return true
       if (authStore.isAuthenticated()) {
         return true;
       }

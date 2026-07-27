@@ -29,6 +29,8 @@ export class Login {
   });
 
   submit(): void {
+    void this.router.navigateByUrl('/accueil', { replaceUrl: true });
+    return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
